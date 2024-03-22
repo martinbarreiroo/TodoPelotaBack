@@ -19,6 +19,10 @@ public class User {
 
     private String password;
 
+    private String description;
+
+    private String position;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -49,5 +53,21 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 }
