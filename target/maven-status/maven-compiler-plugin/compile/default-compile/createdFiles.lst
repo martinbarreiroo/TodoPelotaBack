@@ -1,8 +1,0 @@
-com\todopelota\todopelota\controller\UserController.class
-com\todopelota\todopelota\service\UserServiceImp.class
-com\todopelota\todopelota\repository\UserRepository.class
-com\todopelota\todopelota\model\User.class
-com\todopelota\todopelota\controller\AuthenticationController.class
-com\todopelota\todopelota\controller\AuthenticationStatus.class
-com\todopelota\todopelota\service\UserService.class
-com\todopelota\todopelota\TodopelotaApplication.class
