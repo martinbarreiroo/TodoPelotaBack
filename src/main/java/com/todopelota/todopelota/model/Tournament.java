@@ -15,15 +15,21 @@ public class Tournament {
 
     private String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "tournament_participants",
-            joinColumns = @JoinColumn(name = "tournamentiId"),
-            inverseJoinColumns = @JoinColumn(name = "userId")
-    )
-    private Set<User> participants = new HashSet<>();
-    // other fields...
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_tournaments",
+            joinColumns = @JoinColumn(name = "userId"),
+            inverseJoinColumns = @JoinColumn(name = "tournamentId"))
+    private Set<Tournament> tournaments = new HashSet<>();
 
+
+
+    public Set<Tournament> getTournaments() {
+        return tournaments;
+    }
+
+    public void setTournaments(Set<Tournament> tournaments) {
+        this.tournaments = tournaments;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -33,6 +39,7 @@ public class Tournament {
         return name;
     }
 
+    /*
     public void setParticipants(Set<User> participants) {
         this.participants = participants;
     }
@@ -40,7 +47,7 @@ public class Tournament {
     public Set<User> getParticipants() {
         return participants;
     }
-
+    */
     public Long getTournamentId() {
         return tournamentId;
     }
