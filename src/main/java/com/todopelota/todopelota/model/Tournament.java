@@ -24,5 +24,24 @@ public class Tournament {
     private Set<User> participants = new HashSet<>();
     // other fields...
 
-    // getters and setters...
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setParticipants(Set<User> participants) {
+        this.participants = participants;
+    }
+
+    public Set<User> getParticipants() {
+        return participants;
+    }
+
+    public Long getTournamentId() {
+        return tournamentId;
+    }
 }
