@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    @Column(name = "user_id")
+    private Long user_id;
 
     private String username;
 
@@ -31,19 +31,15 @@ public class User implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_tournaments",
-            joinColumns = @JoinColumn(name = "userId"),
-            inverseJoinColumns = @JoinColumn(name = "tournamentId"))
+
+    @ManyToMany(mappedBy = "participants")
     private Set<Tournament> tournaments = new HashSet<>();
 
 
-    public Set<Tournament> getTournaments() {
-        return tournaments;
-    }
+    public Set<Tournament> getTournaments() { return tournaments; }
 
-    public void setTournaments(Set<Tournament> tournaments) {
-        this.tournaments = tournaments;
+    public void setTournaments(Tournament tournament) {
+        this.tournaments.add(tournament);
     }
 
     @Override
@@ -87,7 +83,6 @@ public class User implements UserDetails {
     public Role getRole() {
         return role;
     }
-
 
     public void setUsername(String name) {
         this.username = name;

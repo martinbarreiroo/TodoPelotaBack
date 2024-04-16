@@ -2,7 +2,6 @@ package com.todopelota.todopelota.model;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,44 +10,80 @@ public class Tournament {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tournamentId;
+    @Column(name = "tournament_id")
+    private Long tournament_id;
 
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_tournaments",
-            joinColumns = @JoinColumn(name = "userId"),
-            inverseJoinColumns = @JoinColumn(name = "tournamentId"))
-    private Set<Tournament> tournaments = new HashSet<>();
+            joinColumns = @JoinColumn(name = "tournament_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> participants = new HashSet<>();
 
+    private String admin;
 
+    private Integer maxParticipants;
 
-    public Set<Tournament> getTournaments() {
-        return tournaments;
+    private String description;
+
+    private String type;
+
+    // Getters and setters
+
+    public Long getTournamentId() {
+        return tournament_id;
     }
 
-    public void setTournaments(Set<Tournament> tournaments) {
-        this.tournaments = tournaments;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setTournamentId(Long tournamentId) {
+        this.tournament_id = tournamentId;
     }
 
     public String getName() {
         return name;
     }
 
-    /*
-    public void setParticipants(Set<User> participants) {
-        this.participants = participants;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Set<User> getParticipants() {
         return participants;
     }
-    */
-    public Long getTournamentId() {
-        return tournamentId;
+
+    public void setParticipants(User participant) {
+        this.participants.add(participant);
     }
+
+    public void setAdmin(String username) {
+    }
+
+    public String getAdmin() {
+        return admin;
+    }
+
+    public Integer getMaxParticipants() {
+        return maxParticipants;
+    }
+
+    public void setMaxParticipants(Integer maxParticipants) {
+        this.maxParticipants = maxParticipants;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
 }
