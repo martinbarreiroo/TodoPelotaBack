@@ -116,5 +116,11 @@ public class User implements UserDetails {
         this.position = position;
     }
 
+    public Long getId() {
+        return user_id;
+    }
 
+    public void setId(long id) {
+        this.user_id = id;
+    }
 }
