@@ -11,18 +11,26 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/update_profile")
+@RequestMapping("/profile")
 @CrossOrigin
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @PutMapping
+    @PutMapping("/update")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<User> updateUser(@RequestBody UserUpdateRequest request) {
         Long userId = Long.parseLong(request.getUserId());
         User updatedUser = userService.updateUser(userId, request);
         return ResponseEntity.ok(updatedUser);
+    }
+
+    @GetMapping("/get/{userId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<User> getUser(@PathVariable Long userId) {
+        User user = userService.findUserById(userId);
+        return ResponseEntity.ok(user);
+
     }
 }
