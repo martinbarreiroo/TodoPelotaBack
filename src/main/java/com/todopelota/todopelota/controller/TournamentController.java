@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/tournaments")
@@ -25,7 +26,7 @@ public class TournamentController {
     @Autowired
     private UserRepository userRepository;
 
-    @PostMapping
+    @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Tournament> createTournament(@RequestBody Map<String, Object> tournament) {
         Tournament newTournament = new Tournament();
@@ -41,4 +42,5 @@ public class TournamentController {
         }
         return ResponseEntity.badRequest().build();
     }
+
 }

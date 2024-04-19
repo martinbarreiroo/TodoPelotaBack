@@ -1,6 +1,9 @@
 package com.todopelota.todopelota.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,11 +15,12 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long user_id;
+    private Long id;
 
     private String username;
 
@@ -32,7 +36,7 @@ public class User implements UserDetails {
     private Role role;
 
 
-    @ManyToMany(mappedBy = "participants")
+    @ManyToMany(mappedBy = "participants", fetch = FetchType.EAGER)
     private Set<Tournament> tournaments = new HashSet<>();
 
 
@@ -117,10 +121,10 @@ public class User implements UserDetails {
     }
 
     public Long getId() {
-        return user_id;
+        return id;
     }
 
     public void setId(long id) {
-        this.user_id = id;
+        this.id = id;
     }
 }

@@ -1,21 +1,26 @@
 package com.todopelota.todopelota.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.todopelota.todopelota.serializer.TournamentSerializer;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@JsonSerialize(using = TournamentSerializer.class)
 public class Tournament {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tournament_id")
-    private Long tournament_id;
+    private Long id;
 
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_tournaments",
             joinColumns = @JoinColumn(name = "tournament_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
@@ -31,12 +36,12 @@ public class Tournament {
 
     // Getters and setters
 
-    public Long getTournamentId() {
-        return tournament_id;
+    public Long getId() {
+        return id;
     }
 
-    public void setTournamentId(Long tournamentId) {
-        this.tournament_id = tournamentId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
