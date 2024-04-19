@@ -10,8 +10,10 @@ import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
+
     @Autowired
     private UserRepository userRepository;
+
     public User updateUser(Long userId, UserUpdateRequest request) {
         return userRepository.findById(userId)
                 .map(user -> {
