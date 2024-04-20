@@ -5,19 +5,27 @@ import com.todopelota.todopelota.model.UserUpdateRequest;
 import com.todopelota.todopelota.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
 
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
     private UserRepository userRepository;
+
+    public UserService(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public User updateUser(Long userId, UserUpdateRequest request) {
         return userRepository.findById(userId)
                 .map(user -> {
                     user.setUsername(request.getUsername());
+                    user.setPassword(passwordEncoder.encode(request.getPassword()));
                     user.setPosition(request.getPosition());
                     user.setDescription(request.getDescription());
                     return userRepository.save(user);

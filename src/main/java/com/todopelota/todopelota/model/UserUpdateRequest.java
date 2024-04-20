@@ -4,8 +4,10 @@ public class UserUpdateRequest {
 
         private String userId;
         private String username;
+        private String password;
         private String position;
         private String description;
+
 
         // getters and setters
 
@@ -41,4 +43,11 @@ public class UserUpdateRequest {
             this.description = description;
         }
 
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
 }

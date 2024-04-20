@@ -7,7 +7,7 @@ import com.todopelota.todopelota.repository.TournamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.Optional;
 
 @Service
 public class TournamentService {
@@ -27,5 +27,10 @@ public class TournamentService {
         tournament.setParticipants(creator);
         creator.setTournaments(tournament);
         return tournamentRepository.save(tournament);
+    }
+
+    public Optional<Tournament> findTournamentById(Long tournamentId) {
+
+        return tournamentRepository.findById(tournamentId);
     }
 }

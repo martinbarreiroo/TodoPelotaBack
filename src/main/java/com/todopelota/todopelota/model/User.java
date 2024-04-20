@@ -30,6 +30,8 @@ public class User implements UserDetails {
 
     private String position;
 
+    private String token;
+
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
@@ -124,5 +126,13 @@ public class User implements UserDetails {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

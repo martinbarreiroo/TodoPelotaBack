@@ -8,12 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/tournaments")
@@ -41,6 +39,17 @@ public class TournamentController {
             return ResponseEntity.ok(createdTournament);
         }
         return ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("/get/{tournament_id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Optional<Tournament>> getTournamentByName(@PathVariable Long tournament_id) {
+        Optional<Tournament> tournament = tournamentService.findTournamentById(tournament_id);
+        if (tournament.isPresent()) {
+            return ResponseEntity.ok(tournament);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
