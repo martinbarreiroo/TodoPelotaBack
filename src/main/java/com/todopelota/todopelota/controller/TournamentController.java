@@ -35,7 +35,8 @@ public class TournamentController {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<User> creator = userRepository.findByUsername(principal.getUsername());
         if (creator.isPresent()) {
-            Tournament createdTournament = tournamentService.createTournament(newTournament.getName(), newTournament.getMaxParticipants(), newTournament.getType(), newTournament.getDescription(), creator.get());
+            Long adminId = Long.parseLong((String) tournament.get("adminId"));
+            Tournament createdTournament = tournamentService.createTournament(newTournament.getName(), newTournament.getMaxParticipants(), newTournament.getType(), newTournament.getDescription(), creator.get(), adminId);
             return ResponseEntity.ok(createdTournament);
         }
         return ResponseEntity.badRequest().build();

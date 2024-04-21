@@ -18,6 +18,9 @@ public class Tournament {
     @Column(name = "tournament_id")
     private Long id;
 
+    @Column(name = "admin")
+    private Long admin;
+
     private String name;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -31,9 +34,6 @@ public class Tournament {
 
     @ManyToMany
     private Set<User> invitedUsers = new HashSet<>();
-
-
-    private String admin;
 
     private Integer maxParticipants;
 
@@ -67,10 +67,9 @@ public class Tournament {
         this.participants.add(participant);
     }
 
-    public void setAdmin(String username) {
-    }
+    public void setAdmin(Long id) { this.admin = id; }
 
-    public String getAdmin() {
+    public Long getAdmin() {
         return admin;
     }
 
