@@ -20,11 +20,18 @@ public class Tournament {
 
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_tournaments",
             joinColumns = @JoinColumn(name = "tournament_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> participants = new HashSet<>();
+
+    @OneToMany(mappedBy = "tournament")
+    private Set<SoccerMatch> soccerMatches = new HashSet<>();
+
+    @ManyToMany
+    private Set<User> invitedUsers = new HashSet<>();
+
 
     private String admin;
 
@@ -91,4 +98,19 @@ public class Tournament {
         this.type = type;
     }
 
+    public Set<SoccerMatch> getSoccerMatches() {
+        return soccerMatches;
+    }
+
+    public void setSoccerMatches(SoccerMatch soccerMatch) {
+        this.soccerMatches.add(soccerMatch);
+    }
+
+    public Set<User> getInvitedUsers() {
+        return invitedUsers;
+    }
+
+    public void setInvitedUsers(User user) {
+        this.invitedUsers.add(user);
+    }
 }

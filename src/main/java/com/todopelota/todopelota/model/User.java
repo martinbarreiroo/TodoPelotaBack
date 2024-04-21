@@ -36,8 +36,11 @@ public class User implements UserDetails {
     private Role role;
 
 
-    @ManyToMany(mappedBy = "participants", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "participants", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Tournament> tournaments = new HashSet<>();
+
+    @ManyToMany(mappedBy = "users")
+    private Set<SoccerMatch> soccerMatches = new HashSet<>();
 
 
     public Set<Tournament> getTournaments() { return tournaments; }
@@ -134,5 +137,13 @@ public class User implements UserDetails {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Set<SoccerMatch> getSoccerMatches() {
+        return soccerMatches;
+    }
+
+    public void setSoccerMatches(SoccerMatch soccerMatch) {
+        this.soccerMatches.add(soccerMatch);
     }
 }
