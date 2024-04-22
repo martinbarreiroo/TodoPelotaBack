@@ -32,6 +32,7 @@ public class TournamentSerializer extends StdSerializer<Tournament> {
         jsonGenerator.writeStringField("type", tournament.getType());
         jsonGenerator.writeStringField("adminId", String.valueOf(tournament.getAdminId()));
         jsonGenerator.writeStringField("adminUsername", tournament.getAdminUsername());
+        jsonGenerator.writeStringField("participants", tournament.getInvitedUsersToString().toString());
         jsonGenerator.writeEndObject();
     }
 }

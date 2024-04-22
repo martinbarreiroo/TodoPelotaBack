@@ -111,6 +111,14 @@ public class Tournament {
         return invitedUsers;
     }
 
+    public Set<String> getInvitedUsersToString() {
+        Set<String> invitedUsers = new HashSet<>();
+        for (User user : this.invitedUsers) {
+            invitedUsers.add(user.getUsername());
+        }
+        return invitedUsers;
+    }
+
     public void setInvitedUsers(User user) {
         this.invitedUsers.add(user);
     }

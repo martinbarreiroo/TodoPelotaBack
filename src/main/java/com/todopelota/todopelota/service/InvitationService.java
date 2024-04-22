@@ -58,6 +58,8 @@ public class InvitationService {
         User user = invitation.getUser();
         Tournament tournament = invitation.getTournament();
         tournament.getParticipants().add(user);
+        tournament.getInvitedUsers().add(user); // Add the user to the set of invited users (for the tournament's admin)
+        tournament.getInvitedUsersToString().add(user.getUsername()); // Add the user's username to the set of invited users (for the tournament's admin)
         user.getTournaments().add(tournament); // Add the tournament to the user's set of tournaments
 
         invitationRepository.delete(invitation); // Save the invitation entity first
