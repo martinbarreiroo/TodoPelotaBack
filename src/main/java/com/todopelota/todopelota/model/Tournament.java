@@ -19,7 +19,9 @@ public class Tournament {
     private Long id;
 
     @Column(name = "admin")
-    private Long admin;
+    private Long adminId;
+
+    private String adminUsername;
 
     private String name;
 
@@ -67,10 +69,10 @@ public class Tournament {
         this.participants.add(participant);
     }
 
-    public void setAdmin(Long id) { this.admin = id; }
+    public void setAdminId(Long id) { this.adminId = id; }
 
-    public Long getAdmin() {
-        return admin;
+    public Long getAdminId() {
+        return adminId;
     }
 
     public Integer getMaxParticipants() {
@@ -111,5 +113,13 @@ public class Tournament {
 
     public void setInvitedUsers(User user) {
         this.invitedUsers.add(user);
+    }
+
+    public String getAdminUsername() {
+        return adminUsername;
+    }
+
+    public void setAdminUsername(String adminUsername) {
+        this.adminUsername = adminUsername;
     }
 }

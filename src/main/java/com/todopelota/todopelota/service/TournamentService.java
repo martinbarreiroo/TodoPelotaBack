@@ -28,7 +28,8 @@ public class TournamentService {
         tournament.setMaxParticipants(maxPlayers);
         tournament.setType(type);
         tournament.setDescription(description);
-        tournament.setAdmin(admin);
+        tournament.setAdminId(admin);
+        tournament.setAdminUsername(user.getUsername());
         creator.setRole(Role.ADMIN);
         tournament.setParticipants(creator);
         creator.setTournaments(tournament);
