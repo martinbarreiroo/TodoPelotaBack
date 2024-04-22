@@ -39,6 +39,11 @@ public class InvitationService {
             return existingInvitation.get();
         }
 
+        // Check if the user is already a participant in the tournament
+        if (tournament.getInvitedUsers().contains(user)) {
+            throw new IllegalArgumentException("User is already a participant in the tournament");
+        }
+
         // If no invitation exists, create a new one
         Invitation invitation = new Invitation();
         invitation.setSenderName(sender);
