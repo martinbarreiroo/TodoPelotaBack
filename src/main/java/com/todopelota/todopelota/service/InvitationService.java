@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class InvitationService {
@@ -25,16 +26,25 @@ public class InvitationService {
 
     public Invitation inviteUserToTournament(String senderName, String userName, Long tournamentId) {
         User sender = userRepository.findByUsername(senderName)
-                .orElseThrow(() -> new NoSuchElementException("Sender not found with username : " + senderName));
+                .orElseThrow(() -> new NoSuchElementException("User not found with username : " + senderName));
         User user = userRepository.findByUsername(userName)
                 .orElseThrow(() -> new NoSuchElementException("User not found with username : " + userName));
         Tournament tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new NoSuchElementException("Tournament not found with id : " + tournamentId));
 
+        // Check if an invitation already exists
+        Optional<Invitation> existingInvitation = invitationRepository.findBySenderAndUserAndTournament(sender, user, tournament);
+        if (existingInvitation.isPresent()) {
+            // If an invitation already exists, return it
+            return existingInvitation.get();
+        }
+
+        // If no invitation exists, create a new one
         Invitation invitation = new Invitation();
-        invitation.setUser(user);
         invitation.setSenderName(sender);
+        invitation.setUser(user);
         invitation.setTournament(tournament);
+        invitation.setStatus("PENDING");
 
         return invitationRepository.save(invitation);
     }
