@@ -49,13 +49,22 @@ public class TournamentController {
 
     @GetMapping("/get/{tournament_id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Optional<Tournament>> getTournamentByName(@PathVariable Long tournament_id) {
-        Optional<Tournament> tournament = tournamentService.findTournamentById(tournament_id);
+    public ResponseEntity<Optional<Tournament>> getTournamentByName(@PathVariable String tournament_id) {
+        Long tournamentId = Long.parseLong(tournament_id);
+        Optional<Tournament> tournament = tournamentService.findTournamentById(tournamentId);
         if (tournament.isPresent()) {
             return ResponseEntity.ok(tournament);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @DeleteMapping("/delete/{tournamentId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> deleteTournament(@PathVariable Long tournamentId) {
+        tournamentService.deleteTournament(tournamentId);
+        return ResponseEntity.ok().build();
+    }
+
 
 }

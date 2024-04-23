@@ -146,4 +146,8 @@ public class User implements UserDetails {
     public void setSoccerMatches(SoccerMatch soccerMatch) {
         this.soccerMatches.add(soccerMatch);
     }
+
+    public void setJoinedTournamentsSet(Set<Tournament> joinedTournaments) {
+        this.joinedTournaments = joinedTournaments;
+    }
 }
