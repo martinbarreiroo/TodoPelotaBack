@@ -7,8 +7,31 @@ public class CreateMatchRequest {
     private String location;
     private String description;
     private Long tournamentId;
+    private String matchId;
+    private String result;
+    private String yellowCards;
+    private String redCards;
+    private String goals;
+    private String assists;
+
 
     // Getters and setters...
+
+    public String getMatchId() {
+        return matchId;
+    }
+
+    public void setMatchId(String matchId) {
+        this.matchId = matchId;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
 
     public Date getDate() {
         return date;
@@ -41,4 +64,37 @@ public class CreateMatchRequest {
     public void setTournamentId(Long tournamentId) {
         this.tournamentId = tournamentId;
     }
+
+    public String getYellowCards() {
+        return yellowCards;
+    }
+
+    public void setYellowCards(String yellowCards) {
+        this.yellowCards = yellowCards;
+    }
+
+    public String getRedCards() {
+        return redCards;
+    }
+
+    public void setRedCards(String redCards) {
+        this.redCards = redCards;
+    }
+
+    public String getGoals() {
+        return goals;
+    }
+
+    public void setGoals(String goals) {
+        this.goals = goals;
+    }
+
+    public String getAssists() {
+        return assists;
+    }
+
+    public void setAssists(String assists) {
+        this.assists = assists;
+    }
+
 }

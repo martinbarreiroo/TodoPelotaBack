@@ -28,9 +28,22 @@ public class SoccerMatch {
 
     private String result;
 
-    // Other fields...
+    private Integer yellowCards;
 
-    // Getters and setters...
+    private Integer redCards;
+
+    private Integer goals;
+
+    private Integer assists;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Set<User> getUsers() {
         return users;
@@ -79,5 +92,38 @@ public class SoccerMatch {
     public void setResult(String result) {
         this.result = result;
     }
+
+    public Integer getYellowCards() {
+        return yellowCards;
+    }
+
+    public void setYellowCards(Integer yellowCards) {
+        this.yellowCards = yellowCards;
+    }
+
+    public Integer getRedCards() {
+        return redCards;
+    }
+
+    public void setRedCards(Integer redCards) {
+        this.redCards = redCards;
+    }
+
+    public Integer getGoals() {
+        return goals;
+    }
+
+    public void setGoals(Integer goals) {
+        this.goals = goals;
+    }
+
+    public Integer getAssists() {
+        return assists;
+    }
+
+    public void setAssists(Integer assists){
+        this.assists = assists;
+    }
+
 
 }

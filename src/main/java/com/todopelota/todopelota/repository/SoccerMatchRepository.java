@@ -4,7 +4,8 @@ import com.todopelota.todopelota.model.SoccerMatch;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Set;
 
 public interface SoccerMatchRepository extends JpaRepository<SoccerMatch, Long> {
-    List<SoccerMatch> findByTournamentId(Long tournamentId);
+    Set<SoccerMatch> findByTournamentId(Long tournamentId);
 }

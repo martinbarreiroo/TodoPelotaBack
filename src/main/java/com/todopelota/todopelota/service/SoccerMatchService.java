@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class SoccerMatchService {
@@ -17,14 +18,15 @@ public class SoccerMatchService {
     private SoccerMatchRepository soccerMatchRepository;
 
 
-    private TournamentRepository tournamentRepository;
-
     public SoccerMatch createMatch(SoccerMatch soccerMatch) {
         return soccerMatchRepository.save(soccerMatch);
     }
 
-    public List<SoccerMatch> findMatchesByTournamentId(Long tournamentId) {
+    public Set<SoccerMatch> findMatchesByTournamentId(Long tournamentId) {
         return soccerMatchRepository.findByTournamentId(tournamentId);
     }
 
+    public Optional<SoccerMatch> findMatchById(Long matchId) {
+        return soccerMatchRepository.findById(matchId);
+    }
 }
