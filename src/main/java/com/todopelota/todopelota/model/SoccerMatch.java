@@ -17,7 +17,7 @@ public class SoccerMatch {
     @ManyToMany
     private Set<User> users = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Tournament tournament;
 
     private Date date;

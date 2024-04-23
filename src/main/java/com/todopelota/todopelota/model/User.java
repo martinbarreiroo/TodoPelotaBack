@@ -33,18 +33,27 @@ public class User implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    private Set<Tournament> createdTournaments = new HashSet<>();
 
-    @ManyToMany(mappedBy = "participants", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<Tournament> tournaments = new HashSet<>();
+    @ManyToMany(mappedBy = "invitedUsers")
+    private Set<Tournament> joinedTournaments = new HashSet<>();
+
 
     @ManyToMany(mappedBy = "users")
     private Set<SoccerMatch> soccerMatches = new HashSet<>();
 
 
-    public Set<Tournament> getTournaments() { return tournaments; }
+    public Set<Tournament> getCreatedTournaments() { return createdTournaments; }
 
-    public void setTournaments(Tournament tournament) {
-        this.tournaments.add(tournament);
+    public void setCreatedTournaments(Tournament tournament) {
+        this.createdTournaments.add(tournament);
+    }
+
+    public Set<Tournament> getJoinedTournaments() { return joinedTournaments; }
+
+    public void setJoinedTournaments(Tournament tournament) {
+        this.joinedTournaments.add(tournament);
     }
 
     @Override

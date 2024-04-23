@@ -33,4 +33,13 @@ public class UserController {
         return ResponseEntity.ok(user);
 
     }
+
+    @DeleteMapping("/delete/{userId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId);
+        return ResponseEntity.ok().build();
+    }
+
+
 }

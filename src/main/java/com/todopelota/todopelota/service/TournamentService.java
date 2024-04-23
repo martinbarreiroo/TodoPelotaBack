@@ -31,8 +31,8 @@ public class TournamentService {
         tournament.setAdminId(admin);
         tournament.setAdminUsername(user.getUsername());
         creator.setRole(Role.ADMIN);
-        tournament.setParticipants(creator);
-        creator.setTournaments(tournament);
+        tournament.setCreator(creator);
+
         return tournamentRepository.save(tournament);
     }
 

@@ -25,17 +25,21 @@ public class Tournament {
 
     private String name;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "user_tournaments",
-            joinColumns = @JoinColumn(name = "tournament_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> participants = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "creator_id")
+    private User creator;
 
-    @OneToMany(mappedBy = "tournament")
+    @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SoccerMatch> soccerMatches = new HashSet<>();
 
     @ManyToMany
+    @JoinTable(
+            name = "tournament_participants",
+            joinColumns = @JoinColumn(name = "tournament_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private Set<User> invitedUsers = new HashSet<>();
+
 
     private Integer maxParticipants;
 
@@ -53,20 +57,18 @@ public class Tournament {
         this.id = id;
     }
 
+    public User getCreator() { return creator; }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Set<User> getParticipants() {
-        return participants;
-    }
-
-    public void setParticipants(User participant) {
-        this.participants.add(participant);
     }
 
     public void setAdminId(Long id) { this.adminId = id; }
@@ -121,6 +123,10 @@ public class Tournament {
 
     public void setInvitedUsers(User user) {
         this.invitedUsers.add(user);
+    }
+
+    public void setInvitedUsersDeleteUser(Set<User> users) {
+        this.invitedUsers = users;
     }
 
     public String getAdminUsername() {
