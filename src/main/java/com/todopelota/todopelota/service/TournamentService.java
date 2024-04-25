@@ -18,7 +18,7 @@ import java.util.Set;
 @Service
 public class TournamentService {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+    static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
 
     @Autowired
@@ -45,7 +45,14 @@ public class TournamentService {
 
     public Optional<Tournament> findTournamentById(Long tournamentId) {
 
-        return tournamentRepository.findById(tournamentId);
+        Optional<Tournament> tournament = tournamentRepository.findById(tournamentId);
+        if (tournament.isPresent()) {
+            tournament.get().setAdminUsername(userRepository.findById(tournament.get().getAdminId()).get().getUsername());
+            return tournament;
+        } else {
+            return Optional.empty();
+        }
+
     }
 
     public void deleteTournament(Long tournamentId) {
@@ -72,5 +79,9 @@ public class TournamentService {
         } catch (Exception e) {
             logger.error("Error deleting tournament with id: {}", tournamentId, e);
         }
+    }
+
+    public Tournament save(Tournament updatedTournament) {
+        return tournamentRepository.save(updatedTournament);
     }
 }

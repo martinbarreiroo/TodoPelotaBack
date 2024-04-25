@@ -59,6 +59,27 @@ public class TournamentController {
         }
     }
 
+    @PutMapping("/update/{tournamentId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Tournament> updateTournament(@PathVariable Long tournamentId, @RequestBody Map<String, Object> tournament) {
+        Optional<Tournament> existingTournament = tournamentService.findTournamentById(tournamentId);
+        if (existingTournament.isPresent()) {
+            Tournament updatedTournament = existingTournament.get();
+            updatedTournament.setName((String) tournament.get("name"));
+            updatedTournament.setDescription((String) tournament.get("description"));
+            try {
+                updatedTournament.setMaxParticipants(Integer.parseInt((String) tournament.get("maxParticipants")));
+            } catch (NumberFormatException e) {
+                return ResponseEntity.badRequest().body(updatedTournament);
+            }
+            updatedTournament.setType((String) tournament.get("type"));
+            Tournament savedTournament = tournamentService.save(updatedTournament);
+            return ResponseEntity.ok(savedTournament);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @DeleteMapping("/delete/{tournamentId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> deleteTournament(@PathVariable Long tournamentId) {

@@ -86,4 +86,11 @@ public class SoccerMatchController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @DeleteMapping("/delete/{matchId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> deleteMatch(@PathVariable Long matchId) {
+        soccerMatchService.deleteMatch(matchId);
+        return ResponseEntity.ok().build();
+    }
 }
