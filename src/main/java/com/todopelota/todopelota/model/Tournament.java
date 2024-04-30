@@ -41,7 +41,7 @@ public class Tournament {
     private Set<User> invitedUsers = new HashSet<>();
 
 
-    private Integer maxParticipants;
+    private String maxParticipants;
 
     private String description;
 
@@ -77,11 +77,11 @@ public class Tournament {
         return adminId;
     }
 
-    public Integer getMaxParticipants() {
+    public String getMaxParticipants() {
         return maxParticipants;
     }
 
-    public void setMaxParticipants(Integer maxParticipants) {
+    public void setMaxParticipants(String maxParticipants) {
         this.maxParticipants = maxParticipants;
     }
 

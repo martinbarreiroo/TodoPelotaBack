@@ -27,7 +27,7 @@ public class TournamentService {
     @Autowired
     private TournamentRepository tournamentRepository;
 
-    public Tournament createTournament(String name, Integer maxPlayers, String type, String description, User creator, Long admin) {
+    public Tournament createTournament(String name, String maxPlayers, String type, String description, User creator, Long admin) {
         User user = userRepository.findById(admin)
                 .orElseThrow(() -> new NoSuchElementException("User not found with id : " + admin));
         Tournament tournament = new Tournament();

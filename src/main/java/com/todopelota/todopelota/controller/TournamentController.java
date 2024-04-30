@@ -29,7 +29,7 @@ public class TournamentController {
     public ResponseEntity<Tournament> createTournament(@RequestBody Map<String, Object> tournament) {
         Tournament newTournament = new Tournament();
         newTournament.setName((String) tournament.get("name"));
-        newTournament.setMaxParticipants(Integer.parseInt((String) tournament.get("players")));
+        newTournament.setMaxParticipants((String) tournament.get("players"));
         newTournament.setType((String) tournament.get("type"));
         newTournament.setDescription((String) tournament.get("description"));
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -68,7 +68,7 @@ public class TournamentController {
             updatedTournament.setName((String) tournament.get("name"));
             updatedTournament.setDescription((String) tournament.get("description"));
             try {
-                updatedTournament.setMaxParticipants(Integer.parseInt((String) tournament.get("maxParticipants")));
+                updatedTournament.setMaxParticipants((String) tournament.get("maxParticipants"));
             } catch (NumberFormatException e) {
                 return ResponseEntity.badRequest().body(updatedTournament);
             }
