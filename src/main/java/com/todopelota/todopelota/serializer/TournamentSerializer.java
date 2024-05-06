@@ -4,8 +4,12 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.todopelota.todopelota.model.Tournament;
+import com.todopelota.todopelota.model.User;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TournamentSerializer extends StdSerializer<Tournament> {
 
@@ -33,6 +37,14 @@ public class TournamentSerializer extends StdSerializer<Tournament> {
         jsonGenerator.writeStringField("adminId", String.valueOf(tournament.getAdminId()));
         jsonGenerator.writeStringField("adminUsername", tournament.getAdminUsername());
         jsonGenerator.writeStringField("participants", tournament.getInvitedUsersToString().toString());
+
+        List<String> allParticipants = new ArrayList<>();
+        allParticipants.add(tournament.getCreator().getUsername());
+        allParticipants.addAll(tournament.getInvitedUsers().stream()
+                .map(User::getUsername)
+                .toList());
+        jsonGenerator.writeObjectField("allParticipants", allParticipants);
+
         jsonGenerator.writeEndObject();
     }
 }
