@@ -37,6 +37,8 @@ public class SoccerMatchController {
         newMatch.setDate(request.getDate());
         newMatch.setLocation(request.getLocation());
         newMatch.setDescription(request.getDescription());
+        newMatch.setTeam1(request.getTeam1());
+        newMatch.setTeam2(request.getTeam2());
 
         Optional<Tournament> tournamentOpt = tournamentService.findTournamentById(request.getTournamentId());
         if (tournamentOpt.isPresent()) {
@@ -75,7 +77,8 @@ public class SoccerMatchController {
         Optional<SoccerMatch> matchOpt = soccerMatchService.findMatchById(Long.parseLong(matchId));
         if (matchOpt.isPresent()) {
             SoccerMatch match = matchOpt.get();
-            match.setResult(request.getResult());
+            match.setResult1(Integer.parseInt(request.getResult1()));
+            match.setResult2(Integer.parseInt(request.getResult2()));
             match.setYellowCards(Integer.parseInt(request.getYellowCards()));
             match.setRedCards(Integer.parseInt(request.getRedCards()));
             match.setGoals(Integer.parseInt(request.getGoals()));

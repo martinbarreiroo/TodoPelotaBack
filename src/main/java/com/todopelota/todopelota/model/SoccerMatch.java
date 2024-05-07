@@ -2,10 +2,7 @@ package com.todopelota.todopelota.model;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class SoccerMatch {
@@ -20,13 +17,21 @@ public class SoccerMatch {
     @ManyToOne(fetch = FetchType.LAZY)
     private Tournament tournament;
 
+    @ElementCollection
+    private List<String> team1 = new ArrayList<>();
+
+    @ElementCollection
+    private List<String> team2 = new ArrayList<>();
+
     private Date date;
 
     private String location;
 
     private String description;
 
-    private String result;
+    private Integer result1;
+
+    private Integer result2;
 
     private Integer yellowCards;
 
@@ -85,12 +90,20 @@ public class SoccerMatch {
         this.description = description;
     }
 
-    public String getResult() {
-        return result;
+    public Integer getResult1() {
+        return result1;
     }
 
-    public void setResult(String result) {
-        this.result = result;
+    public void setResult1(Integer result) {
+        this.result1 = result;
+    }
+
+    public Integer getResult2() {
+        return result2;
+    }
+
+    public void setResult2(Integer result) {
+        this.result2 = result;
     }
 
     public Integer getYellowCards() {
@@ -125,5 +138,19 @@ public class SoccerMatch {
         this.assists = assists;
     }
 
+    public List<String> getTeam1() {
+        return team1;
+    }
 
+    public void setTeam1(List<String> team1) {
+        this.team1 = team1;
+    }
+
+    public List<String> getTeam2() {
+        return team2;
+    }
+
+    public void setTeam2(List<String> team2) {
+        this.team2 = team2;
+    }
 }
