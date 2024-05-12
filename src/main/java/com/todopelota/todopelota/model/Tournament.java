@@ -37,6 +37,9 @@ public class Tournament {
     )
     private Set<User> invitedUsers = new HashSet<>();
 
+    @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
+    private Set<Position> positions = new HashSet<>();
+
 
     private String maxParticipants;
 
@@ -132,5 +135,13 @@ public class Tournament {
 
     public void setAdminUsername(String adminUsername) {
         this.adminUsername = adminUsername;
+    }
+
+    public Set<Position> getPositions() {
+        return positions;
+    }
+
+    public void setPositions(Set<Position> positions) {
+        this.positions = positions;
     }
 }

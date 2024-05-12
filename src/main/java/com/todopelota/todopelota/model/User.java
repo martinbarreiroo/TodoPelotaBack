@@ -30,6 +30,14 @@ public class User implements UserDetails {
 
     private String position;
 
+    private int totalGoals;
+
+    private int totalAssists;
+
+    private int totalYellowCards;
+
+    private int totalRedCards;
+
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
@@ -137,7 +145,6 @@ public class User implements UserDetails {
     public void setId(long id) {
         this.id = id;
     }
-    
 
     public Set<SoccerMatch> getSoccerMatches() {
         return soccerMatches;
@@ -150,4 +157,37 @@ public class User implements UserDetails {
     public void setJoinedTournamentsSet(Set<Tournament> joinedTournaments) {
         this.joinedTournaments = joinedTournaments;
     }
+
+    public int getTotalGoals() {
+        return totalGoals;
+    }
+
+    public void setTotalGoals(int totalGoals) {
+        this.totalGoals = totalGoals;
+    }
+
+    public int getTotalAssists() {
+        return totalAssists;
+    }
+
+    public void setTotalAssists(int totalAssists) {
+        this.totalAssists = totalAssists;
+    }
+
+    public int getTotalYellowCards() {
+        return totalYellowCards;
+    }
+
+    public void setTotalYellowCards(int totalYellowCards) {
+        this.totalYellowCards = totalYellowCards;
+    }
+
+    public int getTotalRedCards() {
+        return totalRedCards;
+    }
+
+    public void setTotalRedCards(int totalRedCards) {
+        this.totalRedCards = totalRedCards;
+    }
+
 }
