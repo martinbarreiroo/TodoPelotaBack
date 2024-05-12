@@ -1,5 +1,6 @@
 package com.todopelota.todopelota.controller;
 
+import com.todopelota.todopelota.model.AuthenticationResponse;
 import com.todopelota.todopelota.model.User;
 import com.todopelota.todopelota.model.UserUpdateRequest;
 import com.todopelota.todopelota.service.UserService;
@@ -20,9 +21,9 @@ public class UserController {
 
     @PutMapping("/update")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<User> updateUser(@RequestBody UserUpdateRequest request) {
+    public ResponseEntity<AuthenticationResponse> updateUser(@RequestBody UserUpdateRequest request) {
         Long userId = Long.parseLong(request.getUserId());
-        User updatedUser = userService.updateUser(userId, request);
+        AuthenticationResponse updatedUser = userService.updateUser(userId, request);
         return ResponseEntity.ok(updatedUser);
     }
 

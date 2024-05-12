@@ -1,14 +1,15 @@
 package com.todopelota.todopelota.service;
 
-import com.todopelota.todopelota.model.SoccerMatch;
-import com.todopelota.todopelota.model.Tournament;
-import com.todopelota.todopelota.model.User;
-import com.todopelota.todopelota.model.UserUpdateRequest;
+import com.todopelota.todopelota.model.*;
 import com.todopelota.todopelota.repository.SoccerMatchRepository;
 import com.todopelota.todopelota.repository.TournamentRepository;
 import com.todopelota.todopelota.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,18 +37,38 @@ public class UserService {
     @Autowired
     private SoccerMatchRepository soccerMatchRepository;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JWTService jwtService;
+
     public UserService(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User updateUser(Long userId, UserUpdateRequest request) {
+    public AuthenticationResponse updateUser(Long userId, UserUpdateRequest request) {
         return userRepository.findById(userId)
                 .map(user -> {
+                    user.setId(userId);
                     user.setUsername(request.getUsername());
                     user.setPassword(passwordEncoder.encode(request.getPassword()));
                     user.setPosition(request.getPosition());
                     user.setDescription(request.getDescription());
-                    return userRepository.save(user);
+                    User updatedUser = userRepository.save(user);
+
+                    // Re-authenticate the user
+                    Authentication auth = new UsernamePasswordAuthenticationToken(updatedUser.getUsername(), request.getPassword());
+                    Authentication newAuth = authenticationManager.authenticate(auth);
+                    SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+                    // Generate a new token
+                    String newToken = jwtService.generateToken(updatedUser);
+
+                    // Create a response object containing the new token and the user ID
+                    AuthenticationResponse response = new AuthenticationResponse(newToken, updatedUser.getId());
+
+                    return response;
                 })
                 .orElseThrow(() -> new NoSuchElementException("User not found with ID " + userId));
     }
