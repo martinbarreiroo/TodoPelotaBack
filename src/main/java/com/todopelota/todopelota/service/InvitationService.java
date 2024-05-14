@@ -1,9 +1,11 @@
 package com.todopelota.todopelota.service;
 
 import com.todopelota.todopelota.model.Invitation;
+import com.todopelota.todopelota.model.Position;
 import com.todopelota.todopelota.model.Tournament;
 import com.todopelota.todopelota.model.User;
 import com.todopelota.todopelota.repository.InvitationRepository;
+import com.todopelota.todopelota.repository.PositionRepository;
 import com.todopelota.todopelota.repository.TournamentRepository;
 import com.todopelota.todopelota.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,10 @@ public class InvitationService {
 
     @Autowired
     private TournamentRepository tournamentRepository;
+
+    @Autowired
+    private PositionService positionService;
+
 
     public Invitation inviteUserToTournament(String senderName, String userName, Long tournamentId) {
 
@@ -69,13 +75,17 @@ public class InvitationService {
         Tournament tournament = invitation.getTournament();
         tournament.getInvitedUsers().add(user); // Add the user to the set of invited users (for the tournament's admin)
         tournament.getInvitedUsersToString().add(user.getUsername()); // Add the user's username to the set of invited users (for the tournament's admin)
-        // Add the tournament to the user's set of tournaments
+
+        // Create a new Position for the user
+        Position position = new Position();
+        position.setUser(user);
+        position.setTournament(tournament);
+        positionService.savePosition(position);
 
         invitationRepository.delete(invitation); // Save the invitation entity first
 
         userRepository.save(user); // Save the user entity
         tournamentRepository.save(tournament); // Save the tournament entity
-
     }
 
     public void rejectInvitation(Long invitationId) {

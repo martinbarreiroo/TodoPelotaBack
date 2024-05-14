@@ -1,5 +1,6 @@
 package com.todopelota.todopelota.service;
 
+import com.todopelota.todopelota.model.Position;
 import com.todopelota.todopelota.model.Role;
 import com.todopelota.todopelota.model.Tournament;
 import com.todopelota.todopelota.model.User;
@@ -24,6 +25,9 @@ public class TournamentService {
     @Autowired
     private TournamentRepository tournamentRepository;
 
+    @Autowired
+    private PositionService positionService;
+
     public Tournament createTournament(String name, String maxPlayers, String type, String description, User creator, Long admin) {
         User user = userRepository.findById(admin)
                 .orElseThrow(() -> new NoSuchElementException("User not found with id : " + admin));
@@ -37,7 +41,15 @@ public class TournamentService {
         creator.setRole(Role.ADMIN);
         tournament.setCreator(creator);
 
-        return tournamentRepository.save(tournament);
+        Tournament savedTournament = tournamentRepository.save(tournament);
+
+        // Create a new Position for the creator
+        Position position = new Position();
+        position.setUser(creator);
+        position.setTournament(savedTournament);
+        positionService.savePosition(position);
+
+        return savedTournament;
     }
 
     public Optional<Tournament> findTournamentById(Long tournamentId) {

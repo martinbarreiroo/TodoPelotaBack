@@ -22,6 +22,8 @@ public class Position {
     private int yellowCards;
     private int redCards;
 
+    @Transient
+
     public int getAssists() {
         return assists;
     }

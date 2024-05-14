@@ -41,6 +41,12 @@ public class SoccerMatch {
 
     private Integer assists;
 
+    private Integer team1Points;
+
+    private Integer team2Points;
+
+    private Boolean hasBeenUpdated = false;
+
 
     public Long getId() {
         return id;
@@ -152,5 +158,29 @@ public class SoccerMatch {
 
     public void setTeam2(List<String> team2) {
         this.team2 = team2;
+    }
+
+    public Boolean getHasBeenUpdated() {
+        return hasBeenUpdated;
+    }
+
+    public void setHasBeenUpdated(Boolean hasBeenUpdated) {
+        this.hasBeenUpdated = hasBeenUpdated;
+    }
+
+    public Integer getTeam1Points() {
+        return team1Points;
+    }
+
+    public void setTeam1Points(Integer team1Points) {
+        this.team1Points = team1Points;
+    }
+
+    public Integer getTeam2Points() {
+        return team2Points;
+    }
+
+    public void setTeam2Points(Integer team2Points) {
+        this.team2Points = team2Points;
     }
 }

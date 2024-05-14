@@ -18,6 +18,8 @@ public class CreateMatchRequest {
     private String redCards;
     private String goals;
     private String assists;
+    private Integer team1Points;
+    private Integer team2Points;
 
 
     // Getters and setters...
@@ -123,6 +125,22 @@ public class CreateMatchRequest {
 
     public void setAssists(String assists) {
         this.assists = assists;
+    }
+
+    public Integer getTeam1Points() {
+        return team1Points;
+    }
+
+    public void setTeam1Points(Integer team1Points) {
+        this.team1Points = team1Points;
+    }
+
+    public Integer getTeam2Points() {
+        return team2Points;
+    }
+
+    public void setTeam2Points(Integer team2Points) {
+        this.team2Points = team2Points;
     }
 
 }

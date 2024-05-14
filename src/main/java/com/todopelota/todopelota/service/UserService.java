@@ -113,4 +113,9 @@ public class UserService {
             logger.error("Error deleting user with id: {}", userId, e);
         }
     }
+
+    public User findUserByUsername(String userName) {
+        return userRepository.findByUsername(userName)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username : " + userName));
+    }
 }

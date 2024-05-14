@@ -3,9 +3,12 @@ package com.todopelota.todopelota.controller;
 import com.todopelota.todopelota.model.CreateMatchRequest;
 import com.todopelota.todopelota.model.SoccerMatch;
 import com.todopelota.todopelota.model.Tournament;
+import com.todopelota.todopelota.model.User;
 import com.todopelota.todopelota.repository.SoccerMatchRepository;
+import com.todopelota.todopelota.service.PositionService;
 import com.todopelota.todopelota.service.SoccerMatchService;
 import com.todopelota.todopelota.service.TournamentService;
+import com.todopelota.todopelota.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,6 +32,12 @@ public class SoccerMatchController {
 
     @Autowired
     private SoccerMatchRepository soccerMatchRepository;
+
+    @Autowired
+    private PositionService positionService;
+
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
@@ -83,7 +92,19 @@ public class SoccerMatchController {
             match.setRedCards(Integer.parseInt(request.getRedCards()));
             match.setGoals(Integer.parseInt(request.getGoals()));
             match.setAssists(Integer.parseInt(request.getAssists()));
+            match.setTeam1Points(request.getTeam1Points());
+            match.setTeam2Points(request.getTeam2Points());
+            match.setHasBeenUpdated(true);
             SoccerMatch updatedMatch = soccerMatchRepository.save(match);
+            // update positions for all users in both teams
+            for (String userName : match.getTeam1()) {
+                User user = userService.findUserByUsername(userName);
+                positionService.updatePosition(user, match.getTournament());
+            }
+            for (String userName : match.getTeam2()) {
+                User user = userService.findUserByUsername(userName);
+                positionService.updatePosition(user, match.getTournament());
+            }
             return ResponseEntity.ok(updatedMatch);
         } else {
             return ResponseEntity.notFound().build();
