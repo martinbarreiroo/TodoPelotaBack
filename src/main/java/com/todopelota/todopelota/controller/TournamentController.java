@@ -1,8 +1,10 @@
 package com.todopelota.todopelota.controller;
 
+import com.todopelota.todopelota.model.Position;
 import com.todopelota.todopelota.model.Tournament;
 import com.todopelota.todopelota.model.User;
 import com.todopelota.todopelota.repository.UserRepository;
+import com.todopelota.todopelota.service.PositionService;
 import com.todopelota.todopelota.service.TournamentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,9 @@ public class TournamentController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PositionService positionService;
 
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
@@ -87,5 +92,16 @@ public class TournamentController {
     public ResponseEntity<Void> deleteTournament(@PathVariable Long tournamentId) {
         tournamentService.deleteTournament(tournamentId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/positions/{tournamentId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<Position>> getTournamentPositions(@PathVariable Long tournamentId) {
+        List<Position> positions = positionService.getPositionsByTournamentId(tournamentId);
+        if (positions.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(positions);
+        }
     }
 }

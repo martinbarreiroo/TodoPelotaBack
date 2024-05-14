@@ -52,4 +52,8 @@ public class PositionService {
     public void savePosition(Position position) {
         positionRepository.save(position);
     }
+
+    public List<Position> getPositionsByTournamentId(Long tournamentId) {
+        return positionRepository.findByTournamentId(tournamentId);
+    }
 }
