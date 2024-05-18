@@ -27,6 +27,14 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
+    @PutMapping("/update-password")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<AuthenticationResponse> updateUserPassword(@RequestBody UserUpdateRequest request) {
+        Long userId = Long.parseLong(request.getUserId());
+        AuthenticationResponse updatedUser = userService.updateUserPassword(userId, request);
+        return ResponseEntity.ok(updatedUser);
+    }
+
     @GetMapping("/get/{userId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<User> getUser(@PathVariable Long userId) {

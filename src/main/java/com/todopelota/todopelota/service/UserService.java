@@ -52,9 +52,25 @@ public class UserService {
                 .map(user -> {
                     user.setId(userId);
                     user.setUsername(request.getUsername());
-                    user.setPassword(passwordEncoder.encode(request.getPassword()));
                     user.setPosition(request.getPosition());
                     user.setDescription(request.getDescription());
+                    User updatedUser = userRepository.save(user);
+
+                    // Generate a new token
+                    String newToken = jwtService.generateToken(updatedUser);
+
+                    // Create a response object containing the new token and the user ID
+                    AuthenticationResponse response = new AuthenticationResponse(newToken, updatedUser.getId());
+
+                    return response;
+                })
+                .orElseThrow(() -> new NoSuchElementException("User not found with ID " + userId));
+    }
+
+    public AuthenticationResponse updateUserPassword(Long userId, UserUpdateRequest request) {
+        return userRepository.findById(userId)
+                .map(user -> {
+                    user.setPassword(passwordEncoder.encode(request.getPassword()));
                     User updatedUser = userRepository.save(user);
 
                     // Re-authenticate the user
@@ -66,9 +82,8 @@ public class UserService {
                     String newToken = jwtService.generateToken(updatedUser);
 
                     // Create a response object containing the new token and the user ID
-                    AuthenticationResponse response = new AuthenticationResponse(newToken, updatedUser.getId());
 
-                    return response;
+                    return new AuthenticationResponse(newToken, updatedUser.getId());
                 })
                 .orElseThrow(() -> new NoSuchElementException("User not found with ID " + userId));
     }
