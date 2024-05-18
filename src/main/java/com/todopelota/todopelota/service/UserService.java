@@ -118,4 +118,58 @@ public class UserService {
         return userRepository.findByUsername(userName)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username : " + userName));
     }
+
+    public void updateUserStats(User user) {
+        // Find all tournaments the user participates in
+        Set<Tournament> tournaments = new HashSet<>(tournamentRepository.findTournamentByAdminId(user.getId()));
+
+        // Add all tournaments the user has joined
+        tournaments.addAll(user.getJoinedTournaments());
+        // Initialize stats
+        int totalGoals = 0;
+        int totalAssists = 0;
+        int totalYellowCards = 0;
+        int totalRedCards = 0;
+
+        // Iterate over each tournament
+        for (Tournament tournament : tournaments) {
+            // Get all matches in the tournament
+            Set<SoccerMatch> soccerMatches = soccerMatchRepository.findByTournamentId(tournament.getId());
+
+            // Iterate over each match
+            for (SoccerMatch match : soccerMatches) {
+                // Iterate over each PlayerStat in the match
+                for (PlayerStat goal : match.getGoals()) {
+                    if (goal.getPlayerName().equals(user.getUsername())) {
+                        totalGoals += Integer.parseInt(goal.getStat());
+                    }
+                }
+                for (PlayerStat assist : match.getAssists()) {
+                    if (assist.getPlayerName().equals(user.getUsername())) {
+                        totalAssists += Integer.parseInt(assist.getStat());
+                    }
+                }
+                for (PlayerStat yellowCard : match.getYellowCards()) {
+                    if (yellowCard.getPlayerName().equals(user.getUsername())) {
+                        totalYellowCards += Integer.parseInt(yellowCard.getStat());
+                    }
+                }
+                for (PlayerStat redCard : match.getRedCards()) {
+                    if (redCard.getPlayerName().equals(user.getUsername())) {
+                        totalRedCards += Integer.parseInt(redCard.getStat());
+                    }
+                }
+            }
+        }
+
+        // Update user stats
+        user.setTotalGoals(totalGoals);
+        user.setTotalAssists(totalAssists);
+        user.setTotalYellowCards(totalYellowCards);
+        user.setTotalRedCards(totalRedCards);
+
+        // Save the updated user
+        userRepository.save(user);
+    }
+
 }

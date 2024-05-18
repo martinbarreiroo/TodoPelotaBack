@@ -1,9 +1,6 @@
 package com.todopelota.todopelota.service;
 
-import com.todopelota.todopelota.model.Position;
-import com.todopelota.todopelota.model.SoccerMatch;
-import com.todopelota.todopelota.model.Tournament;
-import com.todopelota.todopelota.model.User;
+import com.todopelota.todopelota.model.*;
 import com.todopelota.todopelota.repository.PositionRepository;
 import com.todopelota.todopelota.repository.SoccerMatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +39,47 @@ public class PositionService {
             } else if (match.getTeam2().contains(user.getUsername())) {
                 // If user's team is team2, add the points of team2 to the total points
                 position.setPoints(position.getPoints() + match.getTeam2Points());
+            }
+        }
+
+        // Save the updated position
+        positionRepository.save(position);
+    }
+
+    public void updatePositionStats(User user, Tournament tournament) {
+        // Find the position of the user in the tournament
+        Position position = positionRepository.findByUserIdAndTournamentId(user.getId(), tournament.getId());
+
+        position.setGoals(0);
+        position.setAssists(0);
+        position.setYellowCards(0);
+        position.setRedCards(0);
+
+        // Get all matches in the tournament
+        Set<SoccerMatch> soccerMatches = soccerMatchRepository.findByTournamentId(tournament.getId());
+
+        // Iterate over each match
+        for (SoccerMatch match : soccerMatches) {
+            // Iterate over each PlayerStat in the match
+            for (PlayerStat goal : match.getGoals()) {
+                if (goal.getPlayerName().equals(user.getUsername())) {
+                    position.setGoals(position.getGoals() + Integer.parseInt(goal.getStat()));
+                }
+            }
+            for (PlayerStat assist : match.getAssists()) {
+                if (assist.getPlayerName().equals(user.getUsername())) {
+                    position.setAssists(position.getAssists() + Integer.parseInt(assist.getStat()));
+                }
+            }
+            for (PlayerStat yellowCard : match.getYellowCards()) {
+                if (yellowCard.getPlayerName().equals(user.getUsername())) {
+                    position.setYellowCards(position.getYellowCards() + Integer.parseInt(yellowCard.getStat()));
+                }
+            }
+            for (PlayerStat redCard : match.getRedCards()) {
+                if (redCard.getPlayerName().equals(user.getUsername())) {
+                    position.setRedCards(position.getRedCards() + Integer.parseInt(redCard.getStat()));
+                }
             }
         }
 

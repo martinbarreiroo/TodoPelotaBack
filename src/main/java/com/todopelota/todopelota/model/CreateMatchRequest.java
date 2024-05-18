@@ -2,6 +2,7 @@ package com.todopelota.todopelota.model;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class CreateMatchRequest {
 
@@ -14,10 +15,10 @@ public class CreateMatchRequest {
     private String matchId;
     private String result1;
     private String result2;
-    private String yellowCards;
-    private String redCards;
-    private String goals;
-    private String assists;
+    private List<PlayerStat>yellowCards;
+    private List<PlayerStat> redCards;
+    private List<PlayerStat> goals;
+    private List<PlayerStat> assists;
     private Integer team1Points;
     private Integer team2Points;
 
@@ -95,35 +96,35 @@ public class CreateMatchRequest {
         this.tournamentId = tournamentId;
     }
 
-    public String getYellowCards() {
+    public List<PlayerStat> getYellowCards() {
         return yellowCards;
     }
 
-    public void setYellowCards(String yellowCards) {
+    public void setYellowCards(List<PlayerStat>yellowCards) {
         this.yellowCards = yellowCards;
     }
 
-    public String getRedCards() {
+    public List<PlayerStat> getRedCards() {
         return redCards;
     }
 
-    public void setRedCards(String redCards) {
+    public void setRedCards(List<PlayerStat> redCards) {
         this.redCards = redCards;
     }
 
-    public String getGoals() {
+    public List<PlayerStat> getGoals() {
         return goals;
     }
 
-    public void setGoals(String goals) {
+    public void setGoals(List<PlayerStat> goals) {
         this.goals = goals;
     }
 
-    public String getAssists() {
+    public List<PlayerStat> getAssists() {
         return assists;
     }
 
-    public void setAssists(String assists) {
+    public void setAssists(List<PlayerStat> assists) {
         this.assists = assists;
     }
 

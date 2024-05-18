@@ -33,19 +33,31 @@ public class SoccerMatch {
 
     private Integer result2;
 
-    private Integer yellowCards;
+    @ElementCollection
+    private List<PlayerStat> yellowCards;
 
-    private Integer redCards;
+    @ElementCollection
+    private List<PlayerStat> redCards;
 
-    private Integer goals;
+    @ElementCollection
+    private List<PlayerStat> goals;
 
-    private Integer assists;
+    @ElementCollection
+    private List<PlayerStat> assists;
 
     private Integer team1Points;
 
     private Integer team2Points;
 
     private Boolean hasBeenUpdated = false;
+
+    private Integer numberOfGoals = 0;
+
+    private Integer numberOfAssists = 0;
+
+    private Integer numberOfYellowCards = 0;
+
+    private Integer numberOfRedCards = 0;
 
 
     public Long getId() {
@@ -112,35 +124,35 @@ public class SoccerMatch {
         this.result2 = result;
     }
 
-    public Integer getYellowCards() {
+    public List<PlayerStat> getYellowCards() {
         return yellowCards;
     }
 
-    public void setYellowCards(Integer yellowCards) {
+    public void setYellowCards(List<PlayerStat> yellowCards) {
         this.yellowCards = yellowCards;
     }
 
-    public Integer getRedCards() {
+    public List<PlayerStat> getRedCards() {
         return redCards;
     }
 
-    public void setRedCards(Integer redCards) {
+    public void setRedCards(List<PlayerStat> redCards) {
         this.redCards = redCards;
     }
 
-    public Integer getGoals() {
+    public List<PlayerStat> getGoals() {
         return goals;
     }
 
-    public void setGoals(Integer goals) {
+    public void setGoals(List<PlayerStat> goals) {
         this.goals = goals;
     }
 
-    public Integer getAssists() {
+    public List<PlayerStat> getAssists() {
         return assists;
     }
 
-    public void setAssists(Integer assists){
+    public void setAssists(List<PlayerStat> assists) {
         this.assists = assists;
     }
 
@@ -183,4 +195,49 @@ public class SoccerMatch {
     public void setTeam2Points(Integer team2Points) {
         this.team2Points = team2Points;
     }
+
+    public Integer getNumberOfGoals() {
+        if(numberOfGoals == null) {
+            return 0;
+        }
+        return numberOfGoals;
+    }
+
+    public void setNumberOfGoals(Integer numberOfGoals) {
+        this.numberOfGoals = numberOfGoals != null ? numberOfGoals : 0;
+    }
+
+    public Integer getNumberOfAssists() {
+        if (numberOfAssists == null) {
+            return 0;
+        }
+        return numberOfAssists;
+    }
+
+    public void setNumberOfAssists(Integer numberOfAssists) {
+        this.numberOfAssists = numberOfAssists != null ? numberOfAssists : 0;;
+    }
+
+    public Integer getNumberOfYellowCards() {
+        if (numberOfYellowCards == null) {
+            return 0;
+        }
+        return numberOfYellowCards;
+    }
+
+    public void setNumberOfYellowCards(Integer numberOfYellowCards) {
+        this.numberOfYellowCards = numberOfYellowCards != null ? numberOfYellowCards : 0;;
+    }
+
+    public Integer getNumberOfRedCards() {
+        if (numberOfRedCards == null) {
+            return 0;
+        }
+        return numberOfRedCards;
+    }
+
+    public void setNumberOfRedCards(Integer numberOfRedCards) {
+        this.numberOfRedCards = numberOfRedCards != null ? numberOfRedCards : 0;
+    }
+
 }

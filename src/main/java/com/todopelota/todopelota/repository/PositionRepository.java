@@ -9,4 +9,6 @@ public interface PositionRepository extends JpaRepository<Position, Long> {
     Position findByUserIdAndTournamentId(Long userId, Long tournamentId);
 
     List<Position> findByTournamentId(Long tournamentId);
+
+    Position findByUserId(Long userId);
 }

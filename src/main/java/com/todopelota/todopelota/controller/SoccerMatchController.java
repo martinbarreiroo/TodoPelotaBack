@@ -1,9 +1,6 @@
 package com.todopelota.todopelota.controller;
 
-import com.todopelota.todopelota.model.CreateMatchRequest;
-import com.todopelota.todopelota.model.SoccerMatch;
-import com.todopelota.todopelota.model.Tournament;
-import com.todopelota.todopelota.model.User;
+import com.todopelota.todopelota.model.*;
 import com.todopelota.todopelota.repository.SoccerMatchRepository;
 import com.todopelota.todopelota.service.PositionService;
 import com.todopelota.todopelota.service.SoccerMatchService;
@@ -14,10 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/matches")
@@ -88,15 +82,55 @@ public class SoccerMatchController {
             SoccerMatch match = matchOpt.get();
             match.setResult1(Integer.parseInt(request.getResult1()));
             match.setResult2(Integer.parseInt(request.getResult2()));
-            match.setYellowCards(Integer.parseInt(request.getYellowCards()));
-            match.setRedCards(Integer.parseInt(request.getRedCards()));
-            match.setGoals(Integer.parseInt(request.getGoals()));
-            match.setAssists(Integer.parseInt(request.getAssists()));
             match.setTeam1Points(request.getTeam1Points());
             match.setTeam2Points(request.getTeam2Points());
+            match.setGoals(request.getGoals());
+            match.setAssists(request.getAssists());
+            match.setYellowCards(request.getYellowCards());
+            match.setRedCards(request.getRedCards());
             match.setHasBeenUpdated(true);
+
+            // Update stats for each user
+            int numberOfGoals = 0;
+            for (PlayerStat goal : request.getGoals()) {
+                User user = userService.findUserByUsername(goal.getPlayerName());
+                userService.updateUserStats(user);
+                numberOfGoals += Integer.parseInt(goal.getStat());
+                positionService.updatePositionStats(user, match.getTournament());
+            }
+            match.setNumberOfGoals(numberOfGoals);
+
+            int numberOfAssists = 0;
+            for (PlayerStat assist : request.getAssists()) {
+                User user = userService.findUserByUsername(assist.getPlayerName());
+                userService.updateUserStats(user);
+                numberOfAssists += Integer.parseInt(assist.getStat());
+                positionService.updatePositionStats(user, match.getTournament());
+            }
+            match.setNumberOfAssists(numberOfAssists);
+
+            int numberOfYellowCards = 0;
+            for (PlayerStat yellowCard : request.getYellowCards()) {
+                User user = userService.findUserByUsername(yellowCard.getPlayerName());
+                userService.updateUserStats(user);
+                numberOfYellowCards += Integer.parseInt(yellowCard.getStat());
+                positionService.updatePositionStats(user, match.getTournament() );
+            }
+            match.setNumberOfYellowCards(numberOfYellowCards);
+
+            int numberOfRedCards = 0;
+
+            for (PlayerStat redCard : request.getRedCards()) {
+                User user = userService.findUserByUsername(redCard.getPlayerName());
+                userService.updateUserStats(user);
+                numberOfRedCards += Integer.parseInt(redCard.getStat());
+                positionService.updatePositionStats(user, match.getTournament());
+            }
+            match.setNumberOfRedCards(numberOfRedCards);
+
             SoccerMatch updatedMatch = soccerMatchRepository.save(match);
-            // update positions for all users in both teams
+
+            // Update positions for all users in both teams
             for (String userName : match.getTeam1()) {
                 User user = userService.findUserByUsername(userName);
                 positionService.updatePosition(user, match.getTournament());
@@ -105,6 +139,7 @@ public class SoccerMatchController {
                 User user = userService.findUserByUsername(userName);
                 positionService.updatePosition(user, match.getTournament());
             }
+
             return ResponseEntity.ok(updatedMatch);
         } else {
             return ResponseEntity.notFound().build();

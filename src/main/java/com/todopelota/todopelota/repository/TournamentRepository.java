@@ -11,4 +11,5 @@ public interface TournamentRepository extends JpaRepository<Tournament, Long> {
     Optional<Tournament> findById(Long tournamentId);
 
     Set<Tournament> findTournamentByAdminId(Long userId);
+
 }
