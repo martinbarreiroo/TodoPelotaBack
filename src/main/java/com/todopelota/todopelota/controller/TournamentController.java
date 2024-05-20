@@ -2,6 +2,7 @@ package com.todopelota.todopelota.controller;
 
 import com.todopelota.todopelota.model.Position;
 import com.todopelota.todopelota.model.Tournament;
+import com.todopelota.todopelota.model.TournamentPositionsResponse;
 import com.todopelota.todopelota.model.User;
 import com.todopelota.todopelota.repository.UserRepository;
 import com.todopelota.todopelota.service.PositionService;
@@ -96,12 +97,21 @@ public class TournamentController {
 
     @GetMapping("/positions/{tournamentId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<Position>> getTournamentPositions(@PathVariable Long tournamentId) {
-        List<Position> positions = positionService.getPositionsByTournamentId(tournamentId);
-        if (positions.isEmpty()) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<TournamentPositionsResponse> getTournamentPositions(@PathVariable Long tournamentId) {
+        Optional<Tournament> tournamentOpt = tournamentService.findTournamentById(tournamentId);
+        if (tournamentOpt.isPresent()) {
+            Tournament tournament = tournamentOpt.get();
+            List<Position> positions = positionService.getPositionsByTournamentId(tournamentId);
+            if (positions.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            } else {
+                TournamentPositionsResponse response = new TournamentPositionsResponse();
+                response.setTournamentName(tournament.getName());
+                response.setPositions(positions);
+                return ResponseEntity.ok(response);
+            }
         } else {
-            return ResponseEntity.ok(positions);
+            return ResponseEntity.notFound().build();
         }
     }
 }
