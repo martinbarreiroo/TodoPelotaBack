@@ -99,6 +99,7 @@ public class SoccerMatchController {
             for (String userName : allUsers) {
                 User user = userService.findUserByUsername(userName);
                 userService.updateUserMatches(user);
+                userService.updateUserPoints(user);
             }
 
             int numberOfGoals = 0;

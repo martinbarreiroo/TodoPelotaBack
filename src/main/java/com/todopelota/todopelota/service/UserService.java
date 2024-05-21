@@ -141,7 +141,7 @@ public class UserService {
         // Add all tournaments the user has joined
         tournaments.addAll(user.getJoinedTournaments());
         // Initialize stats
-        int totalPoints = 0;
+
 
         int totalGoals = 0;
         int totalAssists = 0;
@@ -157,11 +157,7 @@ public class UserService {
             for (SoccerMatch match : soccerMatches) {
                 // Iterate over each PlayerStat in the match
 
-                if (match.getTeam1().contains(user.getUsername())) {
-                    totalPoints += match.getTeam1Points();
-                } else if (match.getTeam2().contains(user.getUsername())) {
-                    totalPoints += match.getTeam2Points();
-                }
+
 
                 for (PlayerStat goal : match.getGoals()) {
                     if (goal.getPlayerName().equals(user.getUsername())) {
@@ -187,7 +183,7 @@ public class UserService {
         }
 
         // Update user stats
-        user.setTotalPoints(totalPoints);
+
         user.setTotalGoals(totalGoals);
         user.setTotalAssists(totalAssists);
         user.setTotalYellowCards(totalYellowCards);
@@ -222,6 +218,39 @@ public class UserService {
 
         // Update user stats
         user.setTotalMatches(totalMatches);
+        // Save the updated user
+        userRepository.save(user);
+    }
+
+    public void updateUserPoints(User user) {
+        // Find all tournaments the user participates in
+        Set<Tournament> tournaments = new HashSet<>(tournamentRepository.findTournamentByAdminId(user.getId()));
+
+        int totalPoints = 0;
+
+        // Add all tournaments the user has joined
+        tournaments.addAll(user.getJoinedTournaments());
+
+        // Iterate over each tournament
+        for (Tournament tournament : tournaments) {
+            // Get all matches in the tournament
+            Set<SoccerMatch> soccerMatches = soccerMatchRepository.findByTournamentId(tournament.getId());
+
+            // Iterate over each match
+            for (SoccerMatch match : soccerMatches) {
+                // Check if the user is in the match
+                if (match.getHasBeenUpdated() && (match.getTeam1().contains(user.getUsername()) || match.getTeam2().contains(user.getUsername()))) {
+                    if (match.getTeam1().contains(user.getUsername())) {
+                        totalPoints += match.getTeam1Points();
+                    } else {
+                        totalPoints += match.getTeam2Points();
+                    }
+                }
+            }
+        }
+
+        // Update user stats
+        user.setTotalPoints(totalPoints);
         // Save the updated user
         userRepository.save(user);
     }
