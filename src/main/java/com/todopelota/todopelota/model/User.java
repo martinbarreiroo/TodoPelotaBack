@@ -30,6 +30,10 @@ public class User implements UserDetails {
 
     private String position;
 
+    private int totalPoints;
+
+    private int totalMatches;
+
     private int totalGoals;
 
     private int totalAssists;
@@ -188,6 +192,22 @@ public class User implements UserDetails {
 
     public void setTotalRedCards(int totalRedCards) {
         this.totalRedCards = totalRedCards;
+    }
+
+    public int getTotalPoints() {
+        return totalPoints;
+    }
+
+    public void setTotalPoints(int totalPoints) {
+        this.totalPoints = totalPoints;
+    }
+
+    public int getTotalMatches() {
+        return totalMatches;
+    }
+
+    public void setTotalMatches(int totalMatches) {
+        this.totalMatches = totalMatches;
     }
 
 }

@@ -91,6 +91,16 @@ public class SoccerMatchController {
             match.setHasBeenUpdated(true);
 
             // Update stats for each user
+
+            List<String> allUsers = new ArrayList<>();
+            allUsers.addAll(match.getTeam1());
+            allUsers.addAll(match.getTeam2());
+
+            for (String userName : allUsers) {
+                User user = userService.findUserByUsername(userName);
+                userService.updateUserMatches(user);
+            }
+
             int numberOfGoals = 0;
             for (PlayerStat goal : request.getGoals()) {
                 User user = userService.findUserByUsername(goal.getPlayerName());
