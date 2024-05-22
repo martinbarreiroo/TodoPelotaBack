@@ -1,6 +1,7 @@
 package com.todopelota.todopelota.service;
 
 import com.todopelota.todopelota.model.*;
+import com.todopelota.todopelota.repository.PositionRepository;
 import com.todopelota.todopelota.repository.SoccerMatchRepository;
 import com.todopelota.todopelota.repository.TournamentRepository;
 import com.todopelota.todopelota.repository.UserRepository;
@@ -36,6 +37,9 @@ public class UserService {
 
     @Autowired
     private SoccerMatchRepository soccerMatchRepository;
+
+    @Autowired
+    private PositionRepository positionRepository;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -102,6 +106,12 @@ public class UserService {
             // Remove the user from all tournaments that they participate in
             Set<Tournament> tournamentsParticipatedByUser = new HashSet<>(user.getJoinedTournaments());
             for (Tournament tournament : tournamentsParticipatedByUser) {
+                List<Position> positions = positionRepository.findByTournamentId(tournament.getId());
+                for (Position position : positions) {
+                    if (position.getUser().getId().equals(userId)) {
+                        positionRepository.delete(position);
+                    }
+                }
                 Set<User> invitedUsers = new HashSet<>();
                 for (User invitedUser : tournament.getInvitedUsers()) {
                     if (!invitedUser.getId().equals(userId)) {
@@ -227,6 +237,9 @@ public class UserService {
         Set<Tournament> tournaments = new HashSet<>(tournamentRepository.findTournamentByAdminId(user.getId()));
 
         int totalPoints = 0;
+        int totalWins = 0;
+        int totalDraws = 0;
+        int totalLosses = 0;
 
         // Add all tournaments the user has joined
         tournaments.addAll(user.getJoinedTournaments());
@@ -241,9 +254,25 @@ public class UserService {
                 // Check if the user is in the match
                 if (match.getHasBeenUpdated() && (match.getTeam1().contains(user.getUsername()) || match.getTeam2().contains(user.getUsername()))) {
                     if (match.getTeam1().contains(user.getUsername())) {
-                        totalPoints += match.getTeam1Points();
+                        int partialPoints = match.getTeam1Points();
+                        totalPoints += partialPoints;
+                        if (partialPoints == 3) {
+                            totalWins += 1;
+                        } else if (partialPoints == 1) {
+                            totalDraws += 1;
+                        } else if (partialPoints == 0) {
+                            totalLosses += 1;
+                        }
                     } else {
-                        totalPoints += match.getTeam2Points();
+                        int partialPoints = match.getTeam2Points();
+                        totalPoints += partialPoints;
+                        if (partialPoints == 3) {
+                            totalWins += 1;
+                        } else if (partialPoints == 1) {
+                            totalDraws += 1;
+                        } else if (partialPoints == 0) {
+                            totalLosses += 1;
+                        }
                     }
                 }
             }
@@ -251,6 +280,10 @@ public class UserService {
 
         // Update user stats
         user.setTotalPoints(totalPoints);
+        user.setTotalWins(totalWins);
+        user.setTotalDraws(totalDraws);
+        user.setTotalLosses(totalLosses);
+
         // Save the updated user
         userRepository.save(user);
     }

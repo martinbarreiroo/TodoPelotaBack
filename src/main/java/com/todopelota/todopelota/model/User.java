@@ -32,6 +32,12 @@ public class User implements UserDetails {
 
     private int totalPoints;
 
+    private int totalWins;
+
+    private int totalDraws;
+
+    private int totalLosses;
+
     private int totalMatches;
 
     private int totalGoals;
@@ -208,6 +214,30 @@ public class User implements UserDetails {
 
     public void setTotalMatches(int totalMatches) {
         this.totalMatches = totalMatches;
+    }
+
+    public int getTotalWins() {
+        return totalWins;
+    }
+
+    public void setTotalWins(int totalWins) {
+        this.totalWins = totalWins;
+    }
+
+    public int getTotalDraws() {
+        return totalDraws;
+    }
+
+    public void setTotalDraws(int totalDraws) {
+        this.totalDraws = totalDraws;
+    }
+
+    public int getTotalLosses() {
+        return totalLosses;
+    }
+
+    public void setTotalLosses(int totalLosses) {
+        this.totalLosses = totalLosses;
     }
 
 }
