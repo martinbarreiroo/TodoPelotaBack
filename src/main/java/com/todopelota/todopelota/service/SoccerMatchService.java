@@ -6,6 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
@@ -40,5 +44,14 @@ public class SoccerMatchService {
         } catch (Exception e) {
             logger.error("Error deleting match with id: {}", matchId, e);
         }
+    }
+
+    public List<SoccerMatch> getMatchesForTomorrow() {
+        ZonedDateTime now = ZonedDateTime.now();
+        ZonedDateTime tomorrow = now.plusDays(1);
+        return soccerMatchRepository.findByDateBetween(
+                now.withHour(0).withMinute(0).withSecond(0),
+                tomorrow.withHour(0).withMinute(0).withSecond(0)
+        );
     }
 }

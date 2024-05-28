@@ -1,5 +1,6 @@
 package com.todopelota.todopelota.model;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +10,7 @@ public class CreateMatchRequest {
 
     private List<String> team1;
     private List<String> team2;
-    private Date date;
+    private ZonedDateTime date;
     private String location;
     private String description;
     private Long tournamentId;
@@ -65,11 +66,11 @@ public class CreateMatchRequest {
         this.result2 = result;
     }
 
-    public Date getDate() {
+    public ZonedDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(ZonedDateTime date) {
         this.date = date;
     }
 

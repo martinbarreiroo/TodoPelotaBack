@@ -2,6 +2,7 @@ package com.todopelota.todopelota.model;
 
 import jakarta.persistence.*;
 
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @Entity
@@ -14,16 +15,16 @@ public class SoccerMatch {
     @ManyToMany
     private Set<User> users = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Tournament tournament;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> team1 = new ArrayList<>();
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> team2 = new ArrayList<>();
 
-    private Date date;
+    private ZonedDateTime date;
 
     private String location;
 
@@ -33,16 +34,16 @@ public class SoccerMatch {
 
     private Integer result2;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<PlayerStat> yellowCards;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<PlayerStat> redCards;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<PlayerStat> goals;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<PlayerStat> assists;
 
     private Integer team1Points;
@@ -58,6 +59,8 @@ public class SoccerMatch {
     private Integer numberOfYellowCards = 0;
 
     private Integer numberOfRedCards = 0;
+
+    private boolean notificationSent = false;
 
 
     public Long getId() {
@@ -84,11 +87,11 @@ public class SoccerMatch {
         this.tournament = tournament;
     }
 
-    public Date getDate() {
+    public ZonedDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(ZonedDateTime date) {
         this.date = date;
     }
 
@@ -238,6 +241,21 @@ public class SoccerMatch {
 
     public void setNumberOfRedCards(Integer numberOfRedCards) {
         this.numberOfRedCards = numberOfRedCards != null ? numberOfRedCards : 0;
+    }
+
+    public List<String> getAllUsers() {
+        List<String> allUsers = new ArrayList<>();
+        allUsers.addAll(team1);
+        allUsers.addAll(team2);
+        return allUsers;
+    }
+
+    public boolean isNotificationSent() {
+        return notificationSent;
+    }
+
+    public void setNotificationSent(boolean notificationSent) {
+        this.notificationSent = notificationSent;
     }
 
 }
