@@ -50,8 +50,8 @@ public class SoccerMatchService {
         ZonedDateTime now = ZonedDateTime.now();
         ZonedDateTime tomorrow = now.plusDays(1);
         return soccerMatchRepository.findByDateBetween(
-                now.withHour(0).withMinute(0).withSecond(0),
-                tomorrow.withHour(0).withMinute(0).withSecond(0)
+                now,
+                tomorrow
         );
     }
 }

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +37,7 @@ public class NotificationService {
     @Scheduled(cron = "0 * * * * ?")
     public void sendMatchNotifications() {
         List<SoccerMatch> matches = soccerMatchService.getMatchesForTomorrow();
+        LocalDate currentDate = LocalDate.now();
         for (SoccerMatch match : matches) {
             if (!match.isNotificationSent()) {
                 List<Optional<User>> allUsers = new ArrayList<>();
@@ -45,7 +48,10 @@ public class NotificationService {
                 logger.info("users got: {}", allUsers.size());
                 for (Optional<User> user : allUsers) {
                     String subject = "Soccer Match Reminder";
-                    String text = "You have a soccer match scheduled for tomorrow at " + match.getLocation() + ".";
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+                    String matchTime = match.getDate().toLocalTime().format(formatter);
+                    String matchDay = (match.getDate().toLocalDate().isEqual(currentDate)) ? "today" : "tomorrow";
+                    String text = "You have a soccer match scheduled for " + matchDay + ", " + matchTime + " at " + match.getLocation() + ".";
                     emailService.sendEmail(user.get().getEmail(), subject, text);
                 }
                 match.setNotificationSent(true);

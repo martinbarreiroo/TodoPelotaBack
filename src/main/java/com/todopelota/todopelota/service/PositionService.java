@@ -32,6 +32,10 @@ public class PositionService {
 
         // Iterate over each match
         for (SoccerMatch match : soccerMatches) {
+
+            if(Objects.isNull(match.getTeam1Points()) || Objects.isNull(match.getTeam2Points())){
+                continue;
+            }
             // Check if the user's team is team1 or team2 in the match
             if (match.getTeam1().contains(user.getUsername())) {
                 // If user's team is team1, add the points of team1 to the total points
