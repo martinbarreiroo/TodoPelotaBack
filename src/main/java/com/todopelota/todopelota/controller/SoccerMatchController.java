@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @RestController
@@ -52,6 +53,23 @@ public class SoccerMatchController {
 
         SoccerMatch createdMatch = soccerMatchService.createMatch(newMatch);
         return ResponseEntity.ok(createdMatch);
+    }
+
+    @PutMapping("/update/{matchId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<SoccerMatch> updateMatchInfo(@PathVariable Long matchId, @RequestBody CreateMatchRequest match) {
+        Optional<SoccerMatch> existingMatch = soccerMatchService.findMatchById(matchId);
+        if (existingMatch.isPresent()) {
+            SoccerMatch updatedMatch = existingMatch.get();
+            updatedMatch.setDate(match.getDate());
+            updatedMatch.setLocation(match.getLocation());
+            updatedMatch.setDescription(match.getDescription());
+            updatedMatch.setNotificationSent(false);
+            SoccerMatch savedMatch = soccerMatchService.updateMatch(updatedMatch);
+            return ResponseEntity.ok(savedMatch);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 

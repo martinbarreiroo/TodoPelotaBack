@@ -1,10 +1,8 @@
 package com.todopelota.todopelota.model;
 
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
 
 public class CreateMatchRequest {
 

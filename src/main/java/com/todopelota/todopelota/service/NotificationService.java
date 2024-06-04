@@ -33,6 +33,13 @@ public class NotificationService {
     @Autowired
     private SoccerMatchRepository soccerMatchRepository;
 
+    public void sendConfirmationEmail(String email, String username) {
+        String subject = "Account Confirmation";
+        String text = "Hello " + username + ",\n\n" +
+                "Thank you for signing up for TodoPelota! If you did not sign up for TodoPelota, please ignore this email.";
+        emailService.sendEmail(email, subject, text);
+    }
+
 
     @Scheduled(cron = "0 * * * * ?")
     public void sendMatchNotifications() {

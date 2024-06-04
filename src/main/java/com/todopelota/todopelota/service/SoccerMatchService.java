@@ -27,6 +27,10 @@ public class SoccerMatchService {
         return soccerMatchRepository.save(soccerMatch);
     }
 
+    public SoccerMatch updateMatch(SoccerMatch soccerMatch) {
+        return soccerMatchRepository.save(soccerMatch);
+    }
+
     public Set<SoccerMatch> findMatchesByTournamentId(Long tournamentId) {
         return soccerMatchRepository.findByTournamentId(tournamentId);
     }

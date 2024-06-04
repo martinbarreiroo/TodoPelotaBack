@@ -4,6 +4,7 @@ import com.todopelota.todopelota.model.AuthenticationResponse;
 import com.todopelota.todopelota.model.Role;
 import com.todopelota.todopelota.model.User;
 import com.todopelota.todopelota.service.AuthenticationService;
+import com.todopelota.todopelota.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +17,15 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
 
+    @Autowired
+    private NotificationService notificationService;
+
 
     @PostMapping("/Signup")
     public ResponseEntity<AuthenticationResponse> signup(@RequestBody User request) {
         try {
             request.setRole(Role.USER); // set the default role to "USER"
+            notificationService.sendConfirmationEmail(request.getEmail(), request.getUsername());
             return ResponseEntity.ok(authenticationService.register(request));
         } catch (RuntimeException ex) {
             return ResponseEntity.badRequest().body(new AuthenticationResponse(ex.getMessage()));
