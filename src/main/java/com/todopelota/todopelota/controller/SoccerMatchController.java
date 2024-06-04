@@ -61,10 +61,14 @@ public class SoccerMatchController {
         Optional<SoccerMatch> existingMatch = soccerMatchService.findMatchById(matchId);
         if (existingMatch.isPresent()) {
             SoccerMatch updatedMatch = existingMatch.get();
+            boolean isDateChanged = !Objects.equals(updatedMatch.getDate(), match.getDate());
+            boolean isLocationChanged = !Objects.equals(updatedMatch.getLocation(), match.getLocation());
+            if (isDateChanged || isLocationChanged) {
+                updatedMatch.setNotificationSent(false);
+            }
             updatedMatch.setDate(match.getDate());
             updatedMatch.setLocation(match.getLocation());
             updatedMatch.setDescription(match.getDescription());
-            updatedMatch.setNotificationSent(false);
             SoccerMatch savedMatch = soccerMatchService.updateMatch(updatedMatch);
             return ResponseEntity.ok(savedMatch);
         } else {
@@ -118,6 +122,8 @@ public class SoccerMatchController {
                 User user = userService.findUserByUsername(userName);
                 userService.updateUserMatches(user);
                 userService.updateUserPoints(user);
+                userService.updateUserStats(user);
+                positionService.updatePositionStats(user, match.getTournament());
             }
 
             int numberOfGoals = 0;
