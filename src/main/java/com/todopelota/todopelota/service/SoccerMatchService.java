@@ -1,7 +1,9 @@
 package com.todopelota.todopelota.service;
 
 import com.todopelota.todopelota.model.SoccerMatch;
+import com.todopelota.todopelota.model.User;
 import com.todopelota.todopelota.repository.SoccerMatchRepository;
+import com.todopelota.todopelota.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class SoccerMatchService {
@@ -21,6 +20,9 @@ public class SoccerMatchService {
 
     @Autowired
     private SoccerMatchRepository soccerMatchRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
 
     public SoccerMatch createMatch(SoccerMatch soccerMatch) {

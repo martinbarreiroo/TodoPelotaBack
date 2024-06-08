@@ -25,7 +25,12 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> signup(@RequestBody User request) {
         try {
             request.setRole(Role.USER); // set the default role to "USER"
-            notificationService.sendConfirmationEmail(request.getEmail(), request.getUsername());
+
+            // Run the email notification process in a separate thread
+            new Thread(() -> {
+                notificationService.sendConfirmationEmail(request.getEmail(), request.getUsername());
+            }).start();
+
             return ResponseEntity.ok(authenticationService.register(request));
         } catch (RuntimeException ex) {
             return ResponseEntity.badRequest().body(new AuthenticationResponse(ex.getMessage()));

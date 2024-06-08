@@ -2,16 +2,14 @@ package com.todopelota.todopelota.controller;
 
 import com.todopelota.todopelota.model.*;
 import com.todopelota.todopelota.repository.SoccerMatchRepository;
-import com.todopelota.todopelota.service.PositionService;
-import com.todopelota.todopelota.service.SoccerMatchService;
-import com.todopelota.todopelota.service.TournamentService;
-import com.todopelota.todopelota.service.UserService;
+import com.todopelota.todopelota.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
@@ -33,6 +31,9 @@ public class SoccerMatchController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
@@ -184,6 +185,24 @@ public class SoccerMatchController {
     @DeleteMapping("/delete/{matchId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> deleteMatch(@PathVariable Long matchId) {
+        Optional<SoccerMatch> match = soccerMatchService.findMatchById(matchId);
+        if (match.isPresent()) {
+            SoccerMatch soccerMatch = match.get();
+            List<String> allUsers = new ArrayList<>();
+            allUsers.addAll(soccerMatch.getTeam1());
+            allUsers.addAll(soccerMatch.getTeam2());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M, HH:mm");
+            String matchDate = soccerMatch.getDate().format(formatter);
+
+
+            // Run the email notification process in a separate thread
+            new Thread(() -> {
+                for (String userName : allUsers) {
+                    User user = userService.findUserByUsername(userName);
+                    notificationService.alertDeletedMatchToParticipants(user.getEmail(), user.getUsername(), soccerMatch.getLocation(), matchDate);
+                }
+            }).start();
+        }
         soccerMatchService.deleteMatch(matchId);
         return ResponseEntity.ok().build();
     }

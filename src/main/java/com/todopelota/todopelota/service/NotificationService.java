@@ -40,6 +40,13 @@ public class NotificationService {
         emailService.sendEmail(email, subject, text);
     }
 
+    public void alertDeletedMatchToParticipants(String email, String username, String matchLocation, String matchDate) {
+        String subject = "Match Cancellation";
+        String text = "Hello " + username + ",\n\n" +
+                "The match you were scheduled to play in" + " " + matchLocation + " " + "at " + matchDate + ", has been cancelled. If you have any questions, please contact the organizer.";
+        emailService.sendEmail(email, subject, text);
+    }
+
 
     @Scheduled(cron = "0 * * * * ?")
     public void sendMatchNotifications() {
