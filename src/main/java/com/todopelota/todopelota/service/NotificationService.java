@@ -47,10 +47,10 @@ public class NotificationService {
         emailService.sendEmail(email, subject, text);
     }
 
-    public void alertRescheduleRequestToAdmin(String email, String username, String matchLocation, String matchDate, String userName) {
+    public void alertRescheduleRequestToAdmin(String email, String username, String matchLocation, String matchDate, String userName, String tournamentName) {
         String subject = "Match Reschedule Request";
         String text = "Hello " + username + ",\n\n" +
-                userName + " " + "has requested to reschedule the match at" + " " + matchLocation + " " + "at " + matchDate + ". Please review the request and make the necessary changes.";
+                userName + " " + "has requested to reschedule the match at" + " " + matchLocation + " " + "at " + matchDate + " " + "from" + " " + tournamentName + " tournament. Please review the request and make the necessary changes.";
         emailService.sendEmail(email, subject, text);
     }
 

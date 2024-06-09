@@ -216,9 +216,11 @@ public class SoccerMatchController {
     public ResponseEntity<Void> rescheduleRequest(@PathVariable Long matchId, @PathVariable Long userId) {
         Optional<SoccerMatch> matchOpt = soccerMatchService.findMatchById(matchId);
         Optional<User> userOpt = userRepository.findById(userId);
-        if (matchOpt.isPresent() && userOpt.isPresent()) {
+        Optional<Tournament> tournamentOpt = tournamentService.findTournamentById(matchOpt.get().getTournament().getId());
+        if (userOpt.isPresent() && tournamentOpt.isPresent()) {
             SoccerMatch match = matchOpt.get();
             User user = userOpt.get();
+            Tournament tournament = tournamentOpt.get();
 
             // Get the tournament's admin
             Optional<User> adminOpt = userRepository.findById(match.getTournament().getAdminId());
@@ -229,7 +231,7 @@ public class SoccerMatchController {
 
                 // Run the email notification process in a separate thread
                 new Thread(() -> {
-                    notificationService.alertRescheduleRequestToAdmin(admin.getEmail(), admin.getUsername(), match.getLocation(), matchDate, user.getUsername());
+                    notificationService.alertRescheduleRequestToAdmin(admin.getEmail(), admin.getUsername(), match.getLocation(), matchDate, user.getUsername(), tournament.getName());
                 }).start();
 
                 return ResponseEntity.ok().build();

@@ -5,6 +5,7 @@ import com.todopelota.todopelota.serializer.TournamentSerializer;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -40,6 +41,8 @@ public class Tournament {
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
     private Set<Position> positions = new HashSet<>();
 
+    @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Message> messages;
 
     private String maxParticipants;
 
@@ -143,5 +146,13 @@ public class Tournament {
 
     public void setPositions(Set<Position> positions) {
         this.positions = positions;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void addMessage(Message message) {
+        this.messages.add(message);
     }
 }
