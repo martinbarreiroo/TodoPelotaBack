@@ -2,6 +2,7 @@ package com.todopelota.todopelota.controller;
 
 import com.todopelota.todopelota.model.*;
 import com.todopelota.todopelota.repository.SoccerMatchRepository;
+import com.todopelota.todopelota.repository.UserRepository;
 import com.todopelota.todopelota.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,9 @@ public class SoccerMatchController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private NotificationService notificationService;
@@ -206,4 +210,35 @@ public class SoccerMatchController {
         soccerMatchService.deleteMatch(matchId);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/rescheduleRequest/{matchId}/user/{userId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> rescheduleRequest(@PathVariable Long matchId, @PathVariable Long userId) {
+        Optional<SoccerMatch> matchOpt = soccerMatchService.findMatchById(matchId);
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (matchOpt.isPresent() && userOpt.isPresent()) {
+            SoccerMatch match = matchOpt.get();
+            User user = userOpt.get();
+
+            // Get the tournament's admin
+            Optional<User> adminOpt = userRepository.findById(match.getTournament().getAdminId());
+            if (adminOpt.isPresent()) {
+                User admin = adminOpt.get();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M, HH:mm");
+                String matchDate = match.getDate().format(formatter);
+
+                // Run the email notification process in a separate thread
+                new Thread(() -> {
+                    notificationService.alertRescheduleRequestToAdmin(admin.getEmail(), admin.getUsername(), match.getLocation(), matchDate, user.getUsername());
+                }).start();
+
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
