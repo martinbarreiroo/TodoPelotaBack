@@ -40,17 +40,19 @@ public class NotificationService {
         emailService.sendEmail(email, subject, text);
     }
 
-    public void alertDeletedMatchToParticipants(String email, String username, String matchLocation, String matchDate) {
+    public void alertDeletedMatchToParticipants(SoccerMatch match, String email, String username, String matchLocation, String matchDate) {
         String subject = "Match Cancellation";
+        String link = "http://localhost:3000/Hub/MisTorneos/" + match.getTournament().getId().toString() +  "/Manage/Matches";
         String text = "Hello " + username + ",\n\n" +
-                "The match you were scheduled to play in" + " " + matchLocation + " " + "at " + matchDate + ", has been cancelled. If you have any questions, please contact the organizer.";
+                "The match you were scheduled to play in" + " " + matchLocation + " " + "at " + matchDate + ", has been cancelled. If you have any questions, please contact the organizer." + "\n\n" + "For more details, please visit: " + link;
         emailService.sendEmail(email, subject, text);
     }
 
-    public void alertRescheduleRequestToAdmin(String email, String username, String matchLocation, String matchDate, String userName, String tournamentName) {
+    public void alertRescheduleRequestToAdmin(SoccerMatch match, String email, String username, String matchLocation, String matchDate, String userName, String tournamentName) {
         String subject = "Match Reschedule Request";
+        String link = "http://localhost:3000/Hub/MisTorneos/" + match.getTournament().getId().toString() +  "/Manage/Matches/" + match.getId().toString();
         String text = "Hello " + username + ",\n\n" +
-                userName + " " + "has requested to reschedule the match at" + " " + matchLocation + " " + "at " + matchDate + " " + "from" + " " + tournamentName + " tournament. Please review the request and make the necessary changes.";
+                userName + " " + "has requested to reschedule the match at" + " " + matchLocation + " " + "at " + matchDate + " " + "from" + " " + tournamentName + " tournament." + "\n\n" + "For more details, please visit: " + link;;
         emailService.sendEmail(email, subject, text);
     }
 
@@ -72,7 +74,8 @@ public class NotificationService {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
                     String matchTime = match.getDate().toLocalTime().format(formatter);
                     String matchDay = (match.getDate().toLocalDate().isEqual(currentDate)) ? "today" : "tomorrow";
-                    String text = "You have a soccer match scheduled for " + matchDay + ", " + matchTime + " at " + match.getLocation() + ".";
+                    String link = "http://localhost:3000/Hub/MisTorneos/" + match.getTournament().getId().toString() +  "/Manage/Matches";
+                    String text = "You have a soccer match scheduled for " + matchDay + ", " + matchTime + " at " + match.getLocation() + ".\n\n" + "For more details, please visit: " + link;
                     emailService.sendEmail(user.get().getEmail(), subject, text);
                 }
                 match.setNotificationSent(true);

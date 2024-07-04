@@ -192,6 +192,7 @@ public class SoccerMatchController {
         Optional<SoccerMatch> match = soccerMatchService.findMatchById(matchId);
         if (match.isPresent()) {
             SoccerMatch soccerMatch = match.get();
+            String adminName = soccerMatch.getTournament().getAdminUsername();
             List<String> allUsers = new ArrayList<>();
             allUsers.addAll(soccerMatch.getTeam1());
             allUsers.addAll(soccerMatch.getTeam2());
@@ -202,8 +203,11 @@ public class SoccerMatchController {
             // Run the email notification process in a separate thread
             new Thread(() -> {
                 for (String userName : allUsers) {
-                    User user = userService.findUserByUsername(userName);
-                    notificationService.alertDeletedMatchToParticipants(user.getEmail(), user.getUsername(), soccerMatch.getLocation(), matchDate);
+
+                    if (!Objects.equals(userName, adminName)) {
+                        User user = userService.findUserByUsername(userName);
+                        notificationService.alertDeletedMatchToParticipants(soccerMatch, user.getEmail(), user.getUsername(), soccerMatch.getLocation(), matchDate);
+                    }
                 }
             }).start();
         }
@@ -231,7 +235,7 @@ public class SoccerMatchController {
 
                 // Run the email notification process in a separate thread
                 new Thread(() -> {
-                    notificationService.alertRescheduleRequestToAdmin(admin.getEmail(), admin.getUsername(), match.getLocation(), matchDate, user.getUsername(), tournament.getName());
+                    notificationService.alertRescheduleRequestToAdmin(match, admin.getEmail(), admin.getUsername(), match.getLocation(), matchDate, user.getUsername(), tournament.getName());
                 }).start();
 
                 return ResponseEntity.ok().build();
