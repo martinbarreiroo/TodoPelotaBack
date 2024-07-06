@@ -60,6 +60,56 @@ public class SoccerMatchController {
         return ResponseEntity.ok(createdMatch);
     }
 
+    @PostMapping("/createFixture/{tournamentId}/{numMatches}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<SoccerMatch>> createFixture(@PathVariable Long tournamentId, @PathVariable int numMatches) {
+        Optional<Tournament> tournamentOpt = tournamentService.findTournamentById(tournamentId);
+        if (!tournamentOpt.isPresent()) {
+            throw new RuntimeException("Tournament not found");
+        }
+
+        Tournament tournament = tournamentOpt.get();
+        List<SoccerMatch> createdMatches = new ArrayList<>();
+
+        ZonedDateTime now = ZonedDateTime.now();
+        ZonedDateTime matchTime = now.withHour(19).withMinute(0).withSecond(0).withNano(0); // 7pm
+
+        // Get all players in the tournament
+        List<String> allPlayers = new ArrayList<>();
+        for (User user : tournament.getInvitedUsers()) {
+            allPlayers.add(user.getUsername());
+        }
+        allPlayers.add(tournament.getAdminUsername());
+
+        if (allPlayers.size() == Integer.parseInt(tournament.getMaxParticipants()) && !tournament.getFixtureGenerated()) {
+            for (int i = 0; i < numMatches; i++) {
+                // Shuffle the list to randomize the order
+                Collections.shuffle(allPlayers);
+
+                SoccerMatch newMatch = new SoccerMatch();
+                newMatch.setDate(matchTime.plusWeeks(i));
+                newMatch.setLocation("Set location"); // replace with actual location
+                newMatch.setDescription("Set description"); // replace with actual description
+
+                // Split the list of players into two teams
+                List<String> team1 = allPlayers.subList(0, allPlayers.size() / 2);
+                List<String> team2 = allPlayers.subList(allPlayers.size() / 2, allPlayers.size());
+                newMatch.setTeam1(new ArrayList<>(team1));
+                newMatch.setTeam2(new ArrayList<>(team2));
+
+                newMatch.setTournament(tournament);
+
+                SoccerMatch createdMatch = soccerMatchService.createMatch(newMatch);
+                createdMatches.add(createdMatch);
+            }
+            tournament.setFixtureGenerated(true);
+            tournamentService.save(tournament);
+            return ResponseEntity.ok(createdMatches);
+        }
+
+        return ResponseEntity.badRequest().build();
+    }
+
     @PutMapping("/update/{matchId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<SoccerMatch> updateMatchInfo(@PathVariable Long matchId, @RequestBody CreateMatchRequest match) {

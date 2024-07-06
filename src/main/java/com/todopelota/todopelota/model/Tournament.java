@@ -50,6 +50,8 @@ public class Tournament {
 
     private String type;
 
+    private Boolean fixtureGenerated = false;
+
     // Getters and setters
 
     public Long getId() {
@@ -154,5 +156,13 @@ public class Tournament {
 
     public void addMessage(Message message) {
         this.messages.add(message);
+    }
+
+    public Boolean getFixtureGenerated() {
+        return fixtureGenerated;
+    }
+
+    public void setFixtureGenerated(Boolean fixtureGenerated) {
+        this.fixtureGenerated = fixtureGenerated;
     }
 }
