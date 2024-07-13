@@ -72,7 +72,7 @@ public class SoccerMatchController {
         List<SoccerMatch> createdMatches = new ArrayList<>();
 
         ZonedDateTime now = ZonedDateTime.now();
-        ZonedDateTime matchTime = now.withHour(19).withMinute(0).withSecond(0).withNano(0); // 7pm
+        ZonedDateTime matchTime = (now.withHour(19).withMinute(0).withSecond(0).withNano(0)).plusDays(1); // 7pm
 
         // Get all players in the tournament
         List<String> allPlayers = new ArrayList<>();
