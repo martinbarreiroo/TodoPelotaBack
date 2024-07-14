@@ -19,4 +19,6 @@ public interface SoccerMatchRepository extends JpaRepository<SoccerMatch, Long> 
     List<SoccerMatch> findByUsersContainsAndTournament(User user, Tournament tournament);
 
     List<SoccerMatch> findByDateBetween(ZonedDateTime start, ZonedDateTime end);
+
+    Set<SoccerMatch> findByTournamentAndHasBeenUpdated(Tournament tournament, Boolean hasBeenUpdated);
 }

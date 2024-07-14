@@ -1,9 +1,7 @@
 package com.todopelota.todopelota.controller;
 
-import com.todopelota.todopelota.model.Position;
-import com.todopelota.todopelota.model.Tournament;
-import com.todopelota.todopelota.model.TournamentPositionsResponse;
-import com.todopelota.todopelota.model.User;
+import com.fasterxml.jackson.databind.deser.DataFormatReaders;
+import com.todopelota.todopelota.model.*;
 import com.todopelota.todopelota.repository.UserRepository;
 import com.todopelota.todopelota.service.PositionService;
 import com.todopelota.todopelota.service.TournamentService;
@@ -109,6 +107,23 @@ public class TournamentController {
                 response.setTournamentName(tournament.getName());
                 response.setPositions(positions);
                 return ResponseEntity.ok(response);
+            }
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/getMatches/{tournamentId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Set<SoccerMatch>> getMatches(@PathVariable Long tournamentId) {
+        Optional<Tournament> tournamentOpt = tournamentService.findTournamentById(tournamentId);
+        if (tournamentOpt.isPresent()) {
+            Tournament tournament = tournamentOpt.get();
+            Set<SoccerMatch> matches = tournamentService.getMatches(tournament);
+            if (matches.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            } else {
+                return ResponseEntity.ok(matches);
             }
         } else {
             return ResponseEntity.notFound().build();

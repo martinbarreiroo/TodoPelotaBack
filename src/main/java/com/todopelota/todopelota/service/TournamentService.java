@@ -1,9 +1,8 @@
 package com.todopelota.todopelota.service;
 
-import com.todopelota.todopelota.model.Position;
-import com.todopelota.todopelota.model.Role;
-import com.todopelota.todopelota.model.Tournament;
-import com.todopelota.todopelota.model.User;
+import com.fasterxml.jackson.databind.deser.DataFormatReaders;
+import com.todopelota.todopelota.model.*;
+import com.todopelota.todopelota.repository.SoccerMatchRepository;
 import com.todopelota.todopelota.repository.TournamentRepository;
 import com.todopelota.todopelota.repository.UserRepository;
 import org.slf4j.Logger;
@@ -12,12 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TournamentService {
 
     static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
+    @Autowired
+    private SoccerMatchRepository soccerMatchRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -92,5 +94,12 @@ public class TournamentService {
 
     public Tournament save(Tournament updatedTournament) {
         return tournamentRepository.save(updatedTournament);
+    }
+
+    public Set<SoccerMatch> getMatches(Tournament tournament) {
+        Set<SoccerMatch> matches = soccerMatchRepository.findByTournamentAndHasBeenUpdated(tournament, true);
+        return matches.stream()
+                .sorted(Comparator.comparing(SoccerMatch::getDate))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 }
