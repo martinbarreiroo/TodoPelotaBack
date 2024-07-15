@@ -5,10 +5,12 @@ import com.todopelota.todopelota.repository.SoccerMatchRepository;
 import com.todopelota.todopelota.repository.UserRepository;
 import com.todopelota.todopelota.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -60,9 +62,9 @@ public class SoccerMatchController {
         return ResponseEntity.ok(createdMatch);
     }
 
-    @PostMapping("/createFixture/{tournamentId}/{numMatches}")
+    @PostMapping("/createFixture/{tournamentId}/{numMatches}/{startDate}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<SoccerMatch>> createFixture(@PathVariable Long tournamentId, @PathVariable int numMatches) {
+    public ResponseEntity<List<SoccerMatch>> createFixture(@PathVariable Long tournamentId, @PathVariable int numMatches, @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate) {
         Optional<Tournament> tournamentOpt = tournamentService.findTournamentById(tournamentId);
         if (!tournamentOpt.isPresent()) {
             throw new RuntimeException("Tournament not found");
@@ -71,8 +73,8 @@ public class SoccerMatchController {
         Tournament tournament = tournamentOpt.get();
         List<SoccerMatch> createdMatches = new ArrayList<>();
 
-        ZonedDateTime now = ZonedDateTime.now();
-        ZonedDateTime matchTime = (now.withHour(19).withMinute(0).withSecond(0).withNano(0)).plusDays(1); // 7pm
+        // Convert Date to ZonedDateTime
+        ZonedDateTime matchTime = startDate.toInstant().atZone(ZoneId.systemDefault()).withHour(19).withMinute(0).withSecond(0).withNano(0);
 
         // Get all players in the tournament
         List<String> allPlayers = new ArrayList<>();
@@ -87,7 +89,7 @@ public class SoccerMatchController {
                 Collections.shuffle(allPlayers);
 
                 SoccerMatch newMatch = new SoccerMatch();
-                newMatch.setDate(matchTime.plusWeeks(i));
+                newMatch.setDate(matchTime.plusWeeks(i)); // Schedule each match a week apart
                 newMatch.setLocation("Set location"); // replace with actual location
                 newMatch.setDescription("Set description"); // replace with actual description
 
